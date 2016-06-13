@@ -8,6 +8,7 @@ import demineurjavafx.view.Plateau2DView;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -31,18 +32,18 @@ public class DemineurJavaFX extends Application {
     @Override
     public void start(Stage primaryStage) {
         
+        // Création de l'écran de lancement du jeu
         VBox layout = new VBox();
-//        layout.setAlignment(Pos.CENTER);
-//        layout.setSpacing(10);
         
+        // Barre de menu
         MenuBar menuBar = new MenuBar();
         
+        // Menu des options de jeu
         Menu menuOptions = new Menu("Options");
-        
-        layout.getChildren().add(menuBar);   
+        Menu menuTaille = new Menu("Taille");
+        Menu menuDifficulte = new Menu("Difficulté");
         
         // Taille de la fenètre de démineur
-        Menu menuTaille = new Menu("Taille");
         final ToggleGroup groupTaille = new ToggleGroup();
         for (String taille : new String[]{"10 x 10", "15 x 10", "15 x 15", "20 x 20"}) {
             RadioMenuItem itemTaille = new RadioMenuItem(taille);
@@ -54,7 +55,6 @@ public class DemineurJavaFX extends Application {
         menuOptions.getItems().addAll(menuTaille);
         
         // Difficulté de la partie de démineur
-        Menu menuDifficulte = new Menu("Difficulté");
         final ToggleGroup groupDifficulte = new ToggleGroup();
         for (String difficulte : new String[]{"Facile", "Moyen", "Difficile", "Expert"}) {
             RadioMenuItem itemDifficulte = new RadioMenuItem(difficulte);
@@ -65,38 +65,45 @@ public class DemineurJavaFX extends Application {
         groupDifficulte.getToggles().get(0).setSelected(true);
         menuOptions.getItems().addAll(menuDifficulte);
         
+        
+        // Menu d'actions
         Menu menu = new Menu("Menu");
-        
-        
         MenuItem menuJouer = new MenuItem("Jouer");
-        menuJouer.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent t) {
-                String taille = groupTaille.getSelectedToggle().getUserData().toString();
-                String difficulte = groupDifficulte.getSelectedToggle().getUserData().toString();
-                setGameProperties(taille, difficulte);
-                
-                Plateau2D plateau = new Plateau2D(size, difficulty);
-                Plateau2DView plateauView = new Plateau2DView(plateau);
-                plateau.addObserver(plateauView);
-                plateau.initializePlateau();
-        //        plateau.startTimer();
-                
-                Scene scene = new Scene(plateauView, plateauView.getWidth(), plateauView.getHeight());
-                primaryStage.setScene(scene);
-            }
+        MenuItem menuQuitter = new MenuItem("Quitter");
+        
+        // Lancement du jeu en fonction des options 
+        // choisies dans le menu d'options
+        menuJouer.setOnAction((ActionEvent t) -> {
+            // Récupération des options choisies
+            String taille = groupTaille.getSelectedToggle().getUserData().toString();
+            String difficulte = groupDifficulte.getSelectedToggle().getUserData().toString();
+            setGameProperties(taille, difficulte);
+            
+            // Création d'un plateau en fonction des options choisies
+            VBox layoutPartie = new VBox();
+//            layoutPartie.setAlignment(Pos.CENTER);
+            layoutPartie.setFillWidth(true);
+            
+            Plateau2D plateau = new Plateau2D(size, difficulty);
+            Plateau2DView plateauView = new Plateau2DView(plateau);
+            plateau.addObserver(plateauView);
+            plateau.initializePlateau();
+            layoutPartie.getChildren().addAll(menuBar, plateauView);
+            //        plateau.startTimer();
+            
+            // Affichage du plateau | Changement de Scene
+            Scene scene = new Scene(layoutPartie, plateauView.getWidth(), plateauView.getHeight() + 20);
+            primaryStage.setScene(scene);
         });
         
-        MenuItem menuQuitter = new MenuItem("Quitter");
-        menuQuitter.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent t) {
-                System.exit(0);
-            }
+        // Quiite l'application
+        menuQuitter.setOnAction((ActionEvent t) -> {
+            System.exit(0);
         });
         menu.getItems().addAll(menuJouer, menuQuitter);
         
         menuBar.getMenus().addAll(menu, menuOptions);
+        layout.getChildren().add(menuBar);
         
         Image demineur = new Image("/demineurjavafx/resources/images/demineur.png");
         ImageView demineurView = new ImageView();
