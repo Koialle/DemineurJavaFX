@@ -41,7 +41,6 @@ abstract public class PlateauView extends Parent implements Observer {
     
     protected BorderPane layout;
     protected StackPane playboard;
-    protected GridPane gridboard;
     protected StatutBox timerStatut;
     protected StatutBox flagStatut;
     protected Button smileyButton;
@@ -78,21 +77,13 @@ abstract public class PlateauView extends Parent implements Observer {
         
         // Setting smiley button
         smileyButton = new Button("", buttonView);
-//        BackgroundImage backgroundImage = new BackgroundImage(neutralSmiley, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-//        Background background = new Background(backgroundImage);
-//        smileyButton.setBackground(background);
-        
-        
-        smileyButton.setOnMouseClicked(new EventHandler<MouseEvent>(){
-            @Override
-            public void handle(MouseEvent t) {
-                if(plateau.getGameState() == GameState.Playing)
-                {
-                    plateau.propagateExplosion();
-                }
+        smileyButton.setOnMouseClicked((MouseEvent t) -> {
+            if(plateau.getGameState() == GameState.Playing)
+            {
+                plateau.propagateExplosion();
             }
         });
-        timerStatut = new StatutBox(""/*"00:00"*/);
+        timerStatut = new StatutBox("00:00");
 //        timer = new Timer();
 //        timer.schedule(new TimerTask(){
 //            @Override
@@ -110,11 +101,6 @@ abstract public class PlateauView extends Parent implements Observer {
         // Grille de cases :
         playboard = new StackPane();
         playboard.setAlignment(Pos.CENTER);
-        gridboard = new GridPane();
-        gridboard.setPadding(new Insets(5,10,5,10));
-        gridboard.setAlignment(Pos.CENTER);
-        
-        playboard.getChildren().add(gridboard);
         layout.setCenter(playboard);
         this.getChildren().add(layout);
     }

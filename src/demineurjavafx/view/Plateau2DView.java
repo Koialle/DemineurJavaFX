@@ -7,18 +7,15 @@ import demineurjavafx.model.Plateau;
 import demineurjavafx.model.Plateau.GameState;
 import demineurjavafx.model.Plateau2D;
 import java.util.Observable;
-import java.util.Timer;
-import java.util.TimerTask;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
@@ -28,8 +25,10 @@ import javafx.scene.text.TextAlignment;
  */
 public class Plateau2DView extends PlateauView {
 
-    private final Image skullImage;
-    private final Text lostText;
+    protected GridPane gridboard;
+    
+//    private final Text lostText;
+    private final Font font;
     
     public Plateau2DView(Plateau2D plateau)
     {
@@ -37,17 +36,22 @@ public class Plateau2DView extends PlateauView {
         width = plateau.getSize().getX() * CASE_SIZE + 20;
         height = plateau.getSize().getY() * CASE_SIZE + 120;
         
-        skullImage = new Image("/demineurjavafx/resources/images/death-skull.png");
-        lostText = new Text("Vous avez mouru...");
-        lostText.setFont(Font.loadFont(DemineurJavaFX.class.getResourceAsStream("/demineurjavafx/resources/fonts/MORTEM.ttf"), 30));
-        lostText.setStroke(Color.RED);
-        lostText.setTextAlignment(TextAlignment.CENTER);
+//        lostText = new Text("Vous avez mouru...");
+//        lostText.setFont(Font.loadFont(DemineurJavaFX.class.getResourceAsStream("/demineurjavafx/resources/fonts/MORTEM.ttf"), 30));
+//        lostText.setStroke(Color.RED);
+//        lostText.setTextAlignment(TextAlignment.CENTER);
+        
+        font = Font.loadFont(DemineurJavaFX.class.getResourceAsStream("/demineurjavafx/resources/fonts/JellyCrazies.ttf"), 30);
     }
     
     @Override
     protected void createView()
     {
         super.createView();
+        gridboard = new GridPane();
+        gridboard.setPadding(new Insets(5,10,5,10));
+        gridboard.setAlignment(Pos.CENTER);
+        
         int xCases = plateau.getSize().getX();
         int yCases = plateau.getSize().getY();
         Case[][] grilleCase = ((Plateau2D)plateau).getGrille();
@@ -82,6 +86,7 @@ public class Plateau2DView extends PlateauView {
                 gridboard.add(cView, x, y);
             }
         }
+        playboard.getChildren().add(gridboard);
     }
     
     @Override
@@ -106,22 +111,9 @@ public class Plateau2DView extends PlateauView {
             {
                 this.createView();
                 this.flagStatut.getText().setText(String.valueOf(plateau.getNbMinesLeft()));
-                // Tester que la partie est perdue
-                // Tester que la partie est gagnée
             }
             else
             {
-                // Transparent BACKGROUND
-                Rectangle rectangle = new Rectangle(
-                        gridboard.getWidth(),
-                        gridboard.getHeight()
-//                    plateau.getSize().getX() * CASE_SIZE,
-//                    plateau.getSize().getX() * CASE_SIZE
-                );
-                rectangle.setFill(Color.rgb(255, 255, 255, 0.06));
-//                rectangle.setOpacity(0.1);
-                playboard.getChildren().add(rectangle);
-
                 // End MESSAGE
                 VBox vbox = new VBox();
                 vbox.setAlignment(Pos.CENTER);
@@ -131,15 +123,12 @@ public class Plateau2DView extends PlateauView {
                 {
                     buttonView.setImage(deadSmiley);
                     
-//                    text.setText("Vous avez perdu ! Ce qui signifie... la Mort.");
-                    ImageView skullview = new ImageView();
-                    skullview.setImage(skullImage);
-//                    skullview.setFitWidth(size);
-                    skullview.setPreserveRatio(true);
-                    skullview.setCache(true);
-                    
-//                    vbox.getChildren().addAll(skullview);
-                    vbox.getChildren().addAll(lostText);
+                    Text text = new Text();
+                    text.setTextAlignment(TextAlignment.CENTER);
+                    text.setFont(font);
+                    text.setText("PERDU");
+                    text.setFill(Color.RED);
+                    vbox.getChildren().add(text);
                 }
                 else if(gameState == GameState.Win)
                 {
@@ -147,8 +136,8 @@ public class Plateau2DView extends PlateauView {
                     
                     Text text = new Text();
                     text.setTextAlignment(TextAlignment.CENTER);
-                    text.setFont(Font.font(null, FontWeight.MEDIUM, 40));
-                    text.setText("Gagné ! Vous êtes en vie !");
+                    text.setFont(font);
+                    text.setText("BRAVO");
                     text.setFill(Color.GREEN);
                     vbox.getChildren().add(text);
                 }

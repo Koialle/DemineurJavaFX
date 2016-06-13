@@ -26,9 +26,8 @@ public class CaseView extends Parent implements Observer {
     private final Text text;
     private final int size;
     
-//    private final Font caseFont = Font.font(null, FontWeight.BOLD, 25);
-    private final Image flagImage; // = new Image("/demineurjavafx/resources/images/demineur-flag.png");
-    private final Image bombImage;
+    private final Image flagImage;
+//    private final Image bombImage;
     
     public CaseView(int size)
     {
@@ -36,7 +35,7 @@ public class CaseView extends Parent implements Observer {
         
         text = new Text();
         flagImage = new Image("/demineurjavafx/resources/images/demineur-flag.png");
-        bombImage = new Image("/demineurjavafx/resources/images/icon.png");
+//        bombImage = new Image("/demineurjavafx/resources/images/icon.png");
         
         // Draw background rectangle
         rectangle = new Rectangle(size, size);
@@ -89,12 +88,6 @@ public class CaseView extends Parent implements Observer {
                     }
                     else if(caseValue == -1) 
                     {
-//                        ImageView ivBomb = new ImageView();
-//                        ivBomb.setImage(bombImage);
-//                        ivBomb.setFitWidth(size);
-//                        ivBomb.setPreserveRatio(true);
-//                        ivBomb.setCache(true);
-//                        root.getChildren().add(ivBomb);
                         text.setText("X");
                         text.setFill(Color.BLACK);
                     }
