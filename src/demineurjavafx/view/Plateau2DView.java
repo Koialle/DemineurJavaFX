@@ -25,10 +25,10 @@ import javafx.scene.text.TextAlignment;
  */
 public class Plateau2DView extends PlateauView {
 
-    protected GridPane gridboard;
+    protected GridPane gridboard; // Composant de grille 2D, pas valable pour une grille 3D
     
-//    private final Text lostText;
-    private final Font font;
+//    protected final Text lostText;
+    protected Text messageFin;
     
     public Plateau2DView(Plateau2D plateau)
     {
@@ -41,7 +41,9 @@ public class Plateau2DView extends PlateauView {
 //        lostText.setStroke(Color.RED);
 //        lostText.setTextAlignment(TextAlignment.CENTER);
         
-        font = Font.loadFont(DemineurJavaFX.class.getResourceAsStream("/demineurjavafx/resources/fonts/JellyCrazies.ttf"), 30);
+        messageFin = new Text();
+        messageFin.setTextAlignment(TextAlignment.CENTER);
+        messageFin.setFont(Font.loadFont(DemineurJavaFX.class.getResourceAsStream("/demineurjavafx/resources/fonts/JellyCrazies.ttf"), 30));
     }
     
     @Override
@@ -123,24 +125,17 @@ public class Plateau2DView extends PlateauView {
                 {
                     buttonView.setImage(deadSmiley);
                     
-                    Text text = new Text();
-                    text.setTextAlignment(TextAlignment.CENTER);
-                    text.setFont(font);
-                    text.setText("PERDU");
-                    text.setFill(Color.RED);
-                    vbox.getChildren().add(text);
+                    messageFin.setText("PERDU");
+                    messageFin.setFill(Color.RED);
                 }
                 else if(gameState == GameState.Win)
                 {
                     buttonView.setImage(happySmiley);
-                    
-                    Text text = new Text();
-                    text.setTextAlignment(TextAlignment.CENTER);
-                    text.setFont(font);
-                    text.setText("BRAVO");
-                    text.setFill(Color.GREEN);
-                    vbox.getChildren().add(text);
+
+                    messageFin.setText("BRAVO");
+                    messageFin.setFill(Color.GREEN);
                 }
+                vbox.getChildren().add(messageFin);
                 playboard.getChildren().add(vbox);
             }
         }
