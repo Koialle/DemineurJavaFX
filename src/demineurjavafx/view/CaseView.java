@@ -27,7 +27,6 @@ public class CaseView extends Parent implements Observer {
     private final int size;
     
     private final Image flagImage;
-//    private final Image bombImage;
     
     public CaseView(int size)
     {
@@ -35,7 +34,6 @@ public class CaseView extends Parent implements Observer {
         
         text = new Text();
         flagImage = new Image("/demineurjavafx/resources/images/demineur-flag.png");
-//        bombImage = new Image("/demineurjavafx/resources/images/icon.png");
         
         // Draw background rectangle
         rectangle = new Rectangle(size, size);

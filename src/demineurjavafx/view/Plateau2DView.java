@@ -1,7 +1,6 @@
 
 package demineurjavafx.view;
 
-import demineurjavafx.DemineurJavaFX;
 import demineurjavafx.model.Case;
 import demineurjavafx.model.Plateau;
 import demineurjavafx.model.Plateau.GameState;
@@ -9,15 +8,11 @@ import demineurjavafx.model.Plateau2D;
 import java.util.Observable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 
 /**
  *
@@ -27,23 +22,12 @@ public class Plateau2DView extends PlateauView {
 
     protected GridPane gridboard; // Composant de grille 2D, pas valable pour une grille 3D
     
-//    protected final Text lostText;
-    protected Text messageFin;
     
     public Plateau2DView(Plateau2D plateau)
     {
         super(plateau);
         width = plateau.getSize().getX() * CASE_SIZE + 20;
         height = plateau.getSize().getY() * CASE_SIZE + 120;
-        
-//        lostText = new Text("Vous avez mouru...");
-//        lostText.setFont(Font.loadFont(DemineurJavaFX.class.getResourceAsStream("/demineurjavafx/resources/fonts/MORTEM.ttf"), 30));
-//        lostText.setStroke(Color.RED);
-//        lostText.setTextAlignment(TextAlignment.CENTER);
-        
-        messageFin = new Text();
-        messageFin.setTextAlignment(TextAlignment.CENTER);
-        messageFin.setFont(Font.loadFont(DemineurJavaFX.class.getResourceAsStream("/demineurjavafx/resources/fonts/JellyCrazies.ttf"), 30));
     }
     
     @Override
@@ -96,11 +80,11 @@ public class Plateau2DView extends PlateauView {
         if(o instanceof Case)
         {
             Case c = (Case)o;
-            if(c.isVisible() && c.getValue() == -1) {
+            if(c.isVisible() && c.getValue() < 0) {
                 plateau.setGameState(GameState.Lost);
             } else {
                 plateau.updateNbMinesLeft();
-                this.flagStatut.getText().setText(String.valueOf(plateau.getNbMinesLeft()));
+                this.flagStatut.setText(String.valueOf(plateau.getNbMinesLeft()));
                 
                 int nbCasesPlateau = plateau.getSize().getX() * plateau.getSize().getY();
                 if(plateau.getNbCaseVisibleOrFlaged() == nbCasesPlateau && plateau.getNbMinesLeft() == 0) plateau.setGameState(GameState.Win);
@@ -112,7 +96,8 @@ public class Plateau2DView extends PlateauView {
             if(gameState == GameState.Playing)
             {
                 this.createView();
-                this.flagStatut.getText().setText(String.valueOf(plateau.getNbMinesLeft()));
+                this.flagStatut.setText(String.valueOf(plateau.getNbMinesLeft()));
+                this.timerStatut.setText(plateau.getMinuteSecondeFormat());
             }
             else
             {

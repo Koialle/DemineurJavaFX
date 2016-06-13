@@ -1,7 +1,6 @@
 
 package demineurjavafx.model;
 
-import demineurjavafx.utils.OTimer;
 import java.util.List;
 import java.util.Observable;
 import java.util.Timer;
@@ -21,7 +20,7 @@ abstract public class Plateau extends Observable {
     protected Difficulty difficulty = Difficulty.Easy;
     protected Size size = Size.Small;
     
-    public String timer;
+    protected Timer timer;
     
     public static enum GameState
     {
@@ -107,82 +106,61 @@ abstract public class Plateau extends Observable {
         this.notifyObservers();
     }
     
-//    public void startTimer()
-//    {
-//        timer.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                if(gameState == GameState.Playing) secondesEcoulees++;
-//            }
-//        }, 0, 1000);
-//    }
-//    
-//    /**
-//     * Permet de récupérer le nombre de minute écoulée depuis le start (ex : 01 | 10 | 42)
-//     * @return le nombre de minute au format string
-//     */
-//    private String getMinute()
-//    {
-//        long minute = secondesEcoulees / 60;
-//
-//        String min = "";
-//
-//        if (minute < 10)
-//                min += "0";
-//
-//        return min + minute;
-//
-//    }
-//
-//   /**
-//    * Permet de récupérer le nombre de seconde écoulée depuis le start (ex : 01 | 10 | 42)
-//    * @return le nombre de seconde au format string
-//    */
-//   private String getSeconde()
-//   {
-////        long minute = secondesEcoulees / 60;
-//        long seconde = secondesEcoulees % 60; //long seconde = secondesEcoulees - (minute * 60);
-//
-//        String sec = "";
-//
-//        if (seconde < 10)
-//                sec += "0";
-//
-//         return sec + seconde;
-//    }
-//
-//    /**
-//     * Permet de récupérer le temps écoulé depuis le start au format MM:SS (ex : 00:06 | 01:42 | 12:21)
-//     * @return le temps écoulé au format string
-//     */
-//    public String getMinuteSecondeFormat()
-//    {
-//           return getMinute() + ":" + getSeconde();	
-//    }
-    
     public void startTimer()
     {
-        
-		
-        //On set le type de temps SECONDE|MILLISECONDE|MINUTE (obligatoire)
-        OTimer.setTimeSet(OTimer.TimeChoice.SECONDE);
-
-        //On le start (obligatoire)
-        OTimer.start();
-
-        //Boucle de jeu (Update) ?
-        //Pas une vrai boucle while (à part si il y a que ça ...)
-        while(!OTimer.isStoped())
-        {
-                //optimisation
-                if (!timer.equals(OTimer.getMinuteSecondeFormat()))
+        timer = new Timer(false);
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if(gameState == GameState.Playing)
                 {
-//                        timerStatut.getText().setText(OTimer.getMinuteSecondeFormat());
-                        timer = OTimer.getMinuteSecondeFormat();
+                    secondesEcoulees++;
                 }
-                
-                if(this.getGameState() != GameState.Playing) OTimer.stop();
-                
-        }
+                else timer.cancel();
+            }
+        }, 0, 1000);
     }
+
+    /**
+     * Permet de récupérer le temps écoulé depuis le start au format MM:SS (ex : 00:06 | 01:42 | 12:21)
+     * @return le temps écoulé au format string
+     */
+    public String getMinuteSecondeFormat()
+    {
+        long minute = secondesEcoulees / 60;
+        long seconde = secondesEcoulees % 60; //long seconde = secondesEcoulees - (minute * 60);
+        
+        String min = "", sec = "";
+
+        if (minute < 10) min += "0";
+        if (seconde < 10) sec += "0";
+        
+        return min+minute + ":" + sec+seconde;	
+    }
+    
+//    public void startTimer()
+//    {
+//        
+//		
+//        //On set le type de temps SECONDE|MILLISECONDE|MINUTE (obligatoire)
+//        OTimer.setTimeSet(OTimer.TimeChoice.SECONDE);
+//
+//        //On le start (obligatoire)
+//        OTimer.start();
+//
+//        //Boucle de jeu (Update) ?
+//        //Pas une vrai boucle while (à part si il y a que ça ...)
+//        while(!OTimer.isStoped())
+//        {
+//                //optimisation
+//                if (!timer.equals(OTimer.getMinuteSecondeFormat()))
+//                {
+////                        timerStatut.getText().setText(OTimer.getMinuteSecondeFormat());
+//                        timer = OTimer.getMinuteSecondeFormat();
+//                }
+//                
+//                if(this.getGameState() != GameState.Playing) OTimer.stop();
+//                
+//        }
+//    }
 }

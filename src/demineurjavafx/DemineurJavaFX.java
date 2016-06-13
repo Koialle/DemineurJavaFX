@@ -7,8 +7,6 @@ import demineurjavafx.model.Plateau2D;
 import demineurjavafx.view.Plateau2DView;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -65,7 +63,6 @@ public class DemineurJavaFX extends Application {
         groupDifficulte.getToggles().get(0).setSelected(true);
         menuOptions.getItems().addAll(menuDifficulte);
         
-        
         // Menu d'actions
         Menu menu = new Menu("Menu");
         MenuItem menuJouer = new MenuItem("Jouer");
@@ -81,7 +78,6 @@ public class DemineurJavaFX extends Application {
             
             // Création d'un plateau en fonction des options choisies
             VBox layoutPartie = new VBox();
-//            layoutPartie.setAlignment(Pos.CENTER);
             layoutPartie.setFillWidth(true);
             
             Plateau2D plateau = new Plateau2D(size, difficulty);
@@ -89,14 +85,14 @@ public class DemineurJavaFX extends Application {
             plateau.addObserver(plateauView);
             plateau.initializePlateau();
             layoutPartie.getChildren().addAll(menuBar, plateauView);
-            //        plateau.startTimer();
+            plateau.startTimer();
             
             // Affichage du plateau | Changement de Scene
             Scene scene = new Scene(layoutPartie, plateauView.getWidth(), plateauView.getHeight() + 20);
             primaryStage.setScene(scene);
         });
         
-        // Quiite l'application
+        // Quitte l'application
         menuQuitter.setOnAction((ActionEvent t) -> {
             System.exit(0);
         });
@@ -105,20 +101,17 @@ public class DemineurJavaFX extends Application {
         menuBar.getMenus().addAll(menu, menuOptions);
         layout.getChildren().add(menuBar);
         
+        // Image de démineur pour le menu de départ
         Image demineur = new Image("/demineurjavafx/resources/images/demineur.png");
         ImageView demineurView = new ImageView();
         demineurView.setImage(demineur);
-        demineurView.setFitHeight(200);
         demineurView.setFitWidth(300);
-        demineurView.setPreserveRatio(true);
-//        demineurView.setCache(true);
+        demineurView.setFitHeight(280);
         layout.getChildren().add(demineurView);
         
         Scene startScene = new Scene(layout, 300, 300); 
         
-        
-        
-        primaryStage.setTitle("Démineur JavaFX - @Ophélie EOUZAN");
+        primaryStage.setTitle("Démineur JavaFX - Ophélie EOUZAN");
         primaryStage.setScene(startScene);
         primaryStage.show();
     }

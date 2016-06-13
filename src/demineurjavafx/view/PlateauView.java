@@ -1,31 +1,24 @@
 
 package demineurjavafx.view;
 
-import com.sun.prism.paint.Color;
+import demineurjavafx.DemineurJavaFX;
 import demineurjavafx.model.Plateau;
 import demineurjavafx.model.Plateau.GameState;
-import demineurjavafx.utils.OTimer;
-import demineurjavafx.utils.OTimer.TimeChoice;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Timer;
 import java.util.TimerTask;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 /**
  *
@@ -51,6 +44,8 @@ abstract public class PlateauView extends Parent implements Observer {
     protected Image deadSmiley;
     protected ImageView buttonView;
     
+    protected Text messageFin;
+    
     public PlateauView(Plateau plateau)
     {
         this.plateau = plateau;
@@ -64,6 +59,10 @@ abstract public class PlateauView extends Parent implements Observer {
         buttonView.setFitHeight(50);
         buttonView.setPreserveRatio(true);
 //        buttonView.setCache(true);
+        
+        messageFin = new Text();
+        messageFin.setTextAlignment(TextAlignment.CENTER);
+        messageFin.setFont(Font.loadFont(DemineurJavaFX.class.getResourceAsStream("/demineurjavafx/resources/fonts/JellyCrazies.ttf"), 30));
     }
     
     protected void createView()
@@ -83,21 +82,24 @@ abstract public class PlateauView extends Parent implements Observer {
                 plateau.propagateExplosion();
             }
         });
-        timerStatut = new StatutBox("00:00");
-//        timer = new Timer();
-//        timer.schedule(new TimerTask(){
-//            @Override
-//            public void run() {
-//                if(plateau.getGameState() == GameState.Playing)
-//                    timerStatut.getText().setText(plateau.getMinuteSecondeFormat());
-//            }
-//        }, 0, 1000);        
+        timerStatut = new StatutBox(""/*"00:00"*/);
+        timer = new Timer(false);
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if(plateau.getGameState() == GameState.Playing)
+                {
+                    timerStatut.setText(plateau.getMinuteSecondeFormat());
+                }
+                else timer.cancel();
+            }
+        }, 0, 1000);
         
         statusboard.setLeft(flagStatut);
         statusboard.setCenter(smileyButton);
         statusboard.setRight(timerStatut);
         layout.setTop(statusboard);
-        
+
         // Grille de cases :
         playboard = new StackPane();
         playboard.setAlignment(Pos.CENTER);
@@ -119,5 +121,10 @@ abstract public class PlateauView extends Parent implements Observer {
         {
             
         }
+    }
+    
+    public void startTimer()
+    {
+        
     }
 }
