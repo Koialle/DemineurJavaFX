@@ -78,16 +78,17 @@ public class CaseView extends Parent implements Observer {
                     rectangle.setFill(Color.LIGHTGREY);
                     root.getChildren().add(rectangle);
                     int caseValue = ((Case)o).getValue();
-                    if(caseValue == -2) // -2 pour la case qui a déclenché l'explosion
+                    
+                    if(caseValue < 0) // -1
                     {
                         text.setText("X");
                         text.setFill(Color.BLACK);
-                        rectangle.setFill(Color.RED);
-                    }
-                    else if(caseValue == -1) 
-                    {
-                        text.setText("X");
-                        text.setFill(Color.BLACK);
+                        
+                        if(caseValue == -2) // -2 pour la case qui a déclenché l'explosion
+                        {
+                            rectangle.setFill(Color.RED);
+                        }
+                        
                     }
                     else if(caseValue > 0)
                     {
