@@ -137,30 +137,4 @@ abstract public class Plateau extends Observable {
         
         return min+minute + ":" + sec+seconde;	
     }
-    
-//    public void startTimer()
-//    {
-//        
-//		
-//        //On set le type de temps SECONDE|MILLISECONDE|MINUTE (obligatoire)
-//        OTimer.setTimeSet(OTimer.TimeChoice.SECONDE);
-//
-//        //On le start (obligatoire)
-//        OTimer.start();
-//
-//        //Boucle de jeu (Update) ?
-//        //Pas une vrai boucle while (à part si il y a que ça ...)
-//        while(!OTimer.isStoped())
-//        {
-//                //optimisation
-//                if (!timer.equals(OTimer.getMinuteSecondeFormat()))
-//                {
-////                        timerStatut.getText().setText(OTimer.getMinuteSecondeFormat());
-//                        timer = OTimer.getMinuteSecondeFormat();
-//                }
-//                
-//                if(this.getGameState() != GameState.Playing) OTimer.stop();
-//                
-//        }
-//    }
 }

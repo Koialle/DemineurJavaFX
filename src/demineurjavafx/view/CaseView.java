@@ -36,7 +36,7 @@ public class CaseView extends Parent implements Observer {
         flagImage = new Image("/demineurjavafx/resources/images/demineur-flag.png");
         
         // Draw background rectangle
-        rectangle = new Rectangle(size, size);
+        rectangle = new Rectangle(size-1, size-1); // -1 car setStroke() ajoute une bordure de 1, et les cases finisses par sortir de la fenètre
         rectangle.setFill(Color.GREY);
         rectangle.setStroke(Color.DARKGREY);
         
@@ -55,16 +55,16 @@ public class CaseView extends Parent implements Observer {
         this.createCaseView((Case) o);
     }
     
-    private void createCaseView(Case o)
+    private void createCaseView(Case c)
     {
-        if(o instanceof Case)
+        if(c instanceof Case)
         {
             this.getChildren().clear();
-            if(o.isFlaged())
+            if(c.isFlaged())
             {
                 ImageView ivFlag = new ImageView();
                 ivFlag.setImage(flagImage);
-                ivFlag.setFitWidth(size);
+                ivFlag.setFitWidth(size-1);
                 ivFlag.setPreserveRatio(true);
                 ivFlag.setCache(true);
                 this.getChildren().add(ivFlag);
@@ -73,13 +73,13 @@ public class CaseView extends Parent implements Observer {
             {
                 root.getChildren().clear();
                 text.setText("");
-                if(o.isVisible())
+                if(c.isVisible())
                 {
                     rectangle.setFill(Color.LIGHTGREY);
                     root.getChildren().add(rectangle);
-                    int caseValue = ((Case)o).getValue();
+                    int caseValue = ((Case)c).getValue();
                     
-                    if(caseValue < 0) // -1
+                    if(caseValue < 0) // -1 & -2 : Case est une bombe
                     {
                         text.setText("X");
                         text.setFill(Color.BLACK);
@@ -88,7 +88,6 @@ public class CaseView extends Parent implements Observer {
                         {
                             rectangle.setFill(Color.RED);
                         }
-                        
                     }
                     else if(caseValue > 0)
                     {

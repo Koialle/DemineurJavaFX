@@ -7,6 +7,7 @@ import demineurjavafx.model.Plateau2D;
 import demineurjavafx.view.Plateau2DView;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -17,6 +18,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  *
@@ -29,7 +31,6 @@ public class DemineurJavaFX extends Application {
     
     @Override
     public void start(Stage primaryStage) {
-        
         // Création de l'écran de lancement du jeu
         VBox layout = new VBox();
         
@@ -88,7 +89,7 @@ public class DemineurJavaFX extends Application {
             plateau.startTimer();
             
             // Affichage du plateau | Changement de Scene
-            Scene scene = new Scene(layoutPartie, plateauView.getWidth(), plateauView.getHeight() + 20);
+            Scene scene = new Scene(layoutPartie, plateauView.getWidth() + 10, plateauView.getHeight() + 120);
             primaryStage.setScene(scene);
         });
         
@@ -111,7 +112,11 @@ public class DemineurJavaFX extends Application {
         
         Scene startScene = new Scene(layout, 300, 300); 
         
+        // Window stuff
         primaryStage.setTitle("Démineur JavaFX - Ophélie EOUZAN");
+        primaryStage.setOnCloseRequest((WindowEvent we) -> {
+            System.exit(0); // Close all process
+        });
         primaryStage.setScene(startScene);
         primaryStage.show();
     }

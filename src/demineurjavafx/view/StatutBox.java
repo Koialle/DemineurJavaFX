@@ -22,7 +22,7 @@ public class StatutBox extends Parent {
         StackPane root = new StackPane();
         
         // Rectangle
-        Rectangle rectangle = new Rectangle(150, 60);
+        Rectangle rectangle = new Rectangle(130, 60);
         rectangle.setFill(Color.BLACK);
         
         // Texte

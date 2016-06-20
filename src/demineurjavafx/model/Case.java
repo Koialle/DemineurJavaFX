@@ -61,6 +61,10 @@ public class Case extends Observable {
         this.neighbors = neighbors;
     }
 
+    /**
+     * Rend la case visible si elle ne l'était pas déjà et si elle n'a ps de drapeau.
+     * @return true si la case est devenue visible, false sinon
+     */
     public boolean makeVisible() {
         if(!this.flaged && !this.visible)
         {
@@ -72,6 +76,10 @@ public class Case extends Observable {
         return false;
     }
     
+    /**
+     * Pose un drapeau si la case n'en a pas, enlève le drapeau si elle en a un.
+     * @return true si un drapeau a été mis, false sinon
+     */
     public boolean putFlag()
     {
         if(!this.visible)

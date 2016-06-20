@@ -12,7 +12,7 @@ public class Plateau2D extends Plateau {
 
     private Case[][] grille;
     
-    private List<int[]> notNeighbors;
+    private List<int[]> notNeighbors; // Permet d'optimiser l'agorithme de découvrement des voisins.
     
     public Plateau2D() {
         super();
@@ -120,10 +120,6 @@ public class Plateau2D extends Plateau {
         }
     }
 
-    public Case[][] getGrille() {
-        return grille;
-    }
-
     @Override
     public void updateNbMinesLeft()
     {
@@ -153,5 +149,9 @@ public class Plateau2D extends Plateau {
             }
         }
         return i;
+    }
+    
+    public Case[][] getGrille() {
+        return grille;
     }
 }
