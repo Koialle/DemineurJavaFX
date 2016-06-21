@@ -115,6 +115,8 @@ abstract public class Plateau extends Observable {
                 if(gameState == GameState.Playing)
                 {
                     secondesEcoulees++;
+//                    setChanged();
+//                    notifyObservers();
                 }
                 else timer.cancel();
             }
@@ -128,7 +130,7 @@ abstract public class Plateau extends Observable {
     public String getMinuteSecondeFormat()
     {
         long minute = secondesEcoulees / 60;
-        long seconde = secondesEcoulees % 60; //long seconde = secondesEcoulees - (minute * 60);
+        long seconde = secondesEcoulees % 60;
         
         String min = "", sec = "";
 

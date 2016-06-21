@@ -4,10 +4,9 @@ package demineurjavafx;
 import demineurjavafx.model.Plateau.Difficulty;
 import demineurjavafx.model.Plateau.Size;
 import demineurjavafx.model.Plateau2D;
-import demineurjavafx.view.Plateau2DView;
+import demineurjavafx.view.PlateauView2D;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -82,7 +81,7 @@ public class DemineurJavaFX extends Application {
             layoutPartie.setFillWidth(true);
             
             Plateau2D plateau = new Plateau2D(size, difficulty);
-            Plateau2DView plateauView = new Plateau2DView(plateau);
+            PlateauView2D plateauView = new PlateauView2D(plateau);
             plateau.addObserver(plateauView);
             plateau.initializePlateau();
             layoutPartie.getChildren().addAll(menuBar, plateauView);

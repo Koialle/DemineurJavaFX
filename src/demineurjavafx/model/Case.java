@@ -9,31 +9,20 @@ import java.util.Observable;
  *
  * @author Ophélie EOUZAN
  */
-public class Case extends Observable {
-    private final int x, y;
-    private int value;
-    private boolean flaged;
-    private boolean visible;
+public abstract class Case extends Observable {
+    protected int value;
+    protected boolean flaged;
+    protected boolean visible;
     
-    private List<Case> neighbors;
+    protected List<? extends Case> neighbors;
     
-    public Case(int x, int y, int value)
+    public Case(int value)
     {
-        this.x = x;
-        this.y = y;
         this.value = value;
         
         this.flaged = false; // Une case marquée ne peut être découverte ?
         this.visible = false;
         this.neighbors = new ArrayList();
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
     }
 
     public int getValue() {
@@ -51,13 +40,17 @@ public class Case extends Observable {
     public boolean isVisible() {
         return visible;
     }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
     
-    public List<Case> getNeighbors()
+    public List<? extends Case> getNeighbors()
     {
         return neighbors;
     }
 
-    public void setNeighbors(List<Case> neighbors) {
+    public void setNeighbors(List<? extends Case> neighbors) {
         this.neighbors = neighbors;
     }
 

@@ -73,26 +73,28 @@ abstract public class PlateauView extends Parent implements Observer {
         layout = new BorderPane();
         // Scoreboard
         BorderPane statusboard = new BorderPane();
-        // Ajouter le timer et le compteur de drapeau au scoreboard
-        // Ainsi que le bouton Smiley pour abandonner le jeu, qui fait la tête quand on a perdu.
         flagStatut = new StatutBox(String.valueOf(plateau.getNbMinesLeft()));
         
         // Setting smiley button
         smileyButton = new Button("", buttonView);
         smileyButton.setOnMouseClicked((MouseEvent t) -> {
+            // Le jeu est en cours
             if(plateau.getGameState() == GameState.Playing)
             {
-                plateau.propagateExplosion();
+                plateau.propagateExplosion(); // On dévoile toutes les mines
             }
         });
-        timerStatut = new StatutBox(""/*"00:00"*/);
+        timerStatut = new StatutBox("");
         timer = new Timer(false);
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                // Tant que le jeu est en cours
                 if(plateau.getGameState() == GameState.Playing)
                 {
+                    // On met à jour le compteur
                     timerStatut.setText(plateau.getMinuteSecondeFormat());
+                    // NOTE: La TimerTask aurait pu être éviteée au moyen de notifiers dans la méthode
                 }
                 else timer.cancel();
             }
@@ -124,12 +126,17 @@ abstract public class PlateauView extends Parent implements Observer {
         if(o instanceof Case) // Case devrait être générique, donc on peut l'utiliser dans la vue générique
         {
             Case c = (Case)o;
+            // Si la case cachée est une bombe
             if(c.isVisible() && c.getValue() < 0) {
+                // On perd la partie
                 plateau.setGameState(GameState.Lost);
+            // Sinon
             } else {
+                // On notifie le modèle qu'il doit mettre à jour son compteur de drapeaux
                 plateau.updateNbMinesLeft();
                 this.flagStatut.setText(String.valueOf(plateau.getNbMinesLeft()));
                 
+                // Vérification que la partie est gagnée.
                 int nbCasesPlateau = plateau.getSize().getX() * plateau.getSize().getY();
                 if(plateau.getNbCaseVisibleOrFlaged() == nbCasesPlateau && plateau.getNbMinesLeft() == 0) plateau.setGameState(GameState.Win);
             }
@@ -139,6 +146,8 @@ abstract public class PlateauView extends Parent implements Observer {
             GameState gameState = plateau.getGameState();
             if(gameState == GameState.Playing)
             {
+                // On rentre dans cette condition seulement 1 fois, 
+                // lors de l'initialisation des cases du plateau
                 this.createView();
                 this.flagStatut.setText(String.valueOf(plateau.getNbMinesLeft()));
                 this.timerStatut.setText(plateau.getMinuteSecondeFormat());

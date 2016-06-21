@@ -2,6 +2,7 @@
 package demineurjavafx.view;
 
 import demineurjavafx.model.Case;
+import demineurjavafx.model.Case2D;
 import demineurjavafx.model.Plateau.GameState;
 import demineurjavafx.model.Plateau2D;
 import java.util.Observable;
@@ -14,11 +15,11 @@ import javafx.scene.layout.GridPane;
  *
  * @author Ophélie EOUZAN
  */
-public class Plateau2DView extends PlateauView {
+public class PlateauView2D extends PlateauView {
 
     private GridPane gridboard; // Composant propre à un grille 2D, pas valable pour une grille 3D
     
-    public Plateau2DView(Plateau2D plateau)
+    public PlateauView2D(Plateau2D plateau)
     {
         super(plateau);
         width = plateau.getSize().getX() * CASE_SIZE;
@@ -35,7 +36,7 @@ public class Plateau2DView extends PlateauView {
         
         int xCases = plateau.getSize().getX();
         int yCases = plateau.getSize().getY();
-        Case[][] grilleCase = ((Plateau2D)plateau).getGrille();
+        Case2D[][] grilleCase = (Case2D[][]) ((Plateau2D)plateau).getGrille();
         for(int x = 0; x < xCases; x++)
         {
             for(int y = 0; y < yCases; y++)
@@ -51,19 +52,22 @@ public class Plateau2DView extends PlateauView {
                 }
                 
                 // Setting listeners
-                CaseView cView = new CaseView(CASE_SIZE);
+                CaseView2D cView = new CaseView2D(CASE_SIZE);
                 cView.setOnMouseClicked((MouseEvent t) -> {
+                    // Jeu en cours
                     if(plateau.getGameState() == GameState.Playing)
                     {
+                        // Clic gauche : propagation du clic
                         if(t.getButton() == MouseButton.PRIMARY) {
                             plateau.propagateClick(c);
+                        // Clic droit : ajout d'un drapeau ou suppression d'un drapeau
                         } else if(t.getButton() == MouseButton.SECONDARY) {
-                            c.putFlag(); // WARNING : possibility to put more flag than mines, but doesn't matter.
+                            c.putFlag(); // WARNING : possibility to put more flag than mines, but doesn't matter in Game play.
                         }
                     }
                 });
-                c.addObserver(cView);
-                c.addObserver(this);
+                c.addObserver(cView); // Case observe CaseView en cas de clic et se met à jour
+                c.addObserver(this); // Plateau observe la case car si une case se met à jour, il va vérifier qu'il ne reste pas des cases
                 gridboard.add(cView, x, y);
             }
         }

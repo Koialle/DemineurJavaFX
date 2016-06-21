@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class Plateau2D extends Plateau {
 
-    private Case[][] grille;
+    private Case2D[][] grille;
     
     private List<int[]> notNeighbors; // Permet d'optimiser l'agorithme de découvrement des voisins.
     
@@ -33,7 +33,7 @@ public class Plateau2D extends Plateau {
     
     @Override
     public void initializePlateau() {
-        grille = new Case[size.getX()][size.getY()];
+        grille = new Case2D[size.getX()][size.getY()];
         for(int x = 0; x < size.getX(); x++)
         {
             for(int y = 0; y < size.getY(); y++)
@@ -45,7 +45,7 @@ public class Plateau2D extends Plateau {
                     value = -1;
                     nbMines++;
                 }
-                Case c = new Case(x, y, value);
+                Case2D c = new Case2D(x, y, value);
                 grille[x][y] = c;
             }
         }
@@ -58,7 +58,7 @@ public class Plateau2D extends Plateau {
     @Override
     public List<Case> getNeighbors(Case c)
     {
-        int x = c.getX(), y = c.getY();
+        int x = ((Case2D)c).getX(), y = ((Case2D)c).getY();
         List<Case> neighbors = new ArrayList();
         int[] v = new int[]{
             -1, 1,
@@ -91,20 +91,24 @@ public class Plateau2D extends Plateau {
     @Override
     public void propagateClick(Case c) {
         // Si la case est piégée, l'explosion est propagée
-        if(c.getValue() == -1)
+        Case2D c2D = (Case2D)c;
+        if(!c2D.isFlaged())
         {
-            c.setValue(-2);
-            c.makeVisible();
-            this.propagateExplosion();
-        }
-        // Sinon on propage seulement les cases normalement
-        else if(c.makeVisible() && c.getValue() == 0)
-        {
-            List<Case> neighbors = c.getNeighbors();
-            neighbors.removeIf(t -> notNeighbors.contains(new int[]{t.getX(), t.getY()}));
-            neighbors.stream().filter((neighbor) -> (!neighbor.isVisible() && neighbor.getValue()!= -1)).forEach((neighbor) -> {
-                this.propagateClick(neighbor);
-            });
+            if(c2D.getValue() == -1)
+            {
+                c2D.setValue(-2);
+                c2D.makeVisible();
+                this.propagateExplosion();
+            }
+            // Sinon on propage seulement les cases normalement
+            else if(c2D.makeVisible() && c2D.getValue() == 0)
+            {
+                List<Case2D> neighbors = (List<Case2D>)c2D.getNeighbors();
+                neighbors.removeIf(t -> notNeighbors.contains(new int[]{t.getX(), t.getY()}));
+                neighbors.stream().filter((neighbor) -> (!neighbor.isVisible() && neighbor.getValue()!= -1)).forEach((neighbor) -> {
+                    this.propagateClick(neighbor);
+                });
+            }
         }
     }
     
