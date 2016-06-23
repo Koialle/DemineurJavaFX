@@ -12,16 +12,8 @@ public class Plateau2D extends Plateau {
 
     private Case2D[][] grille;
     
-    private List<int[]> notNeighbors; // Permet d'optimiser l'agorithme de découvrement des voisins.
-    
     public Plateau2D() {
         super();
-        notNeighbors = new ArrayList();
-        notNeighbors.add(new int[]{-1,1});
-        notNeighbors.add(new int[]{1,1});
-        notNeighbors.add(new int[]{1,-1});
-        notNeighbors.add(new int[]{-1,-1});
-//        timer = new Timer(true);
     }
     
     public Plateau2D(Size size, Difficulty difficulty)
@@ -86,30 +78,6 @@ public class Plateau2D extends Plateau {
             }
         }
         return neighbors;
-    }
-
-    @Override
-    public void propagateClick(Case c) {
-        // Si la case est piégée, l'explosion est propagée
-        Case2D c2D = (Case2D)c;
-        if(!c2D.isFlaged())
-        {
-            if(c2D.getValue() == -1)
-            {
-                c2D.setValue(-2);
-                c2D.makeVisible();
-                this.propagateExplosion();
-            }
-            // Sinon on propage seulement les cases normalement
-            else if(c2D.makeVisible() && c2D.getValue() == 0)
-            {
-                List<Case2D> neighbors = (List<Case2D>)c2D.getNeighbors();
-                neighbors.removeIf(t -> notNeighbors.contains(new int[]{t.getX(), t.getY()}));
-                neighbors.stream().filter((neighbor) -> (!neighbor.isVisible() && neighbor.getValue()!= -1)).forEach((neighbor) -> {
-                    this.propagateClick(neighbor);
-                });
-            }
-        }
     }
     
     @Override

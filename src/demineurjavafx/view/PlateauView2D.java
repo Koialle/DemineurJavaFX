@@ -44,12 +44,7 @@ public class PlateauView2D extends PlateauView {
                 Case c = grilleCase[x][y];
                 
                 // Setting neighbors and value of case
-                c.setNeighbors(plateau.getNeighbors(c));
-                if(c.getValue() != -1)
-                {
-                    long value = c.getNeighbors().stream().filter(t -> t.getValue() == -1).count();
-                    c.setValue((int)value);
-                }
+                c.initializeCaseNeighbors(plateau.getNeighbors(c));
                 
                 // Setting listeners
                 CaseView2D cView = new CaseView2D(CASE_SIZE);
@@ -59,7 +54,7 @@ public class PlateauView2D extends PlateauView {
                     {
                         // Clic gauche : propagation du clic
                         if(t.getButton() == MouseButton.PRIMARY) {
-                            plateau.propagateClick(c);
+                            c.propagateClick();
                         // Clic droit : ajout d'un drapeau ou suppression d'un drapeau
                         } else if(t.getButton() == MouseButton.SECONDARY) {
                             c.putFlag(); // WARNING : possibility to put more flag than mines, but doesn't matter in Game play.

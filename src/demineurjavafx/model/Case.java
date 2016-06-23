@@ -24,6 +24,8 @@ public abstract class Case extends Observable {
         this.visible = false;
         this.neighbors = new ArrayList();
     }
+    
+    abstract void propagate();
 
     public int getValue() {
         return value;
@@ -83,5 +85,32 @@ public abstract class Case extends Observable {
             return true;
         }
         return false;
+    }
+    
+    public void propagateClick() {
+        this.propagate();
+        this.setChanged();
+        this.notifyObservers();
+    }
+
+    /**
+     * Initialise les voisins et la valeur de la case.
+     * @param neighbors 
+     */
+    public void initializeCaseNeighbors(List<? extends Case> neighbors)
+    {
+        this.neighbors = neighbors;
+        this.calculateValue();
+    }
+    
+    /**
+     * Calcule le nombre de voisines minées de la case si la case elle-même n'est pas piégée.
+     */
+    private void calculateValue() {
+        if(value != -1)
+        {
+            long longValue = neighbors.stream().filter(t -> t.getValue() == -1).count();
+            value = (int)longValue;
+        }
     }
 }

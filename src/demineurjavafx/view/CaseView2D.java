@@ -17,7 +17,8 @@ import javafx.scene.text.TextAlignment;
  */
 public class CaseView2D extends CaseView {
 
-    private final Rectangle rectangle;
+    private final Rectangle rectangle; // Rectangle spécifique à Case2D, pour une case 3D on utilisera 
+                                       // probablement autre chose, ou plusieurs rectangles...
     
     public CaseView2D(int size)
     {
@@ -58,13 +59,6 @@ public class CaseView2D extends CaseView {
                 ivFlag.setPreserveRatio(true);
                 ivFlag.setCache(true);
                 root.getChildren().add(ivFlag);
-                
-                if(c2D.isVisible() && c2D.getValue() < 0) // -1 & -2 : Case est une bombe
-                {
-                    text.setText("X");
-                    text.setFill(Color.BLACK);
-                    root.getChildren().add(text);
-                }
             }
             else
             {

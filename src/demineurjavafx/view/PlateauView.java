@@ -129,6 +129,7 @@ abstract public class PlateauView extends Parent implements Observer {
             // Si la case cachée est une bombe
             if(c.isVisible() && c.getValue() < 0) {
                 // On perd la partie
+                plateau.propagateExplosion();
                 plateau.setGameState(GameState.Lost);
             // Sinon
             } else {
