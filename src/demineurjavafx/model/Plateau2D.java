@@ -10,6 +10,7 @@ import java.util.List;
  */
 public class Plateau2D extends Plateau {
 
+    // HashMap
     private Case2D[][] grille;
     
     public Plateau2D() {

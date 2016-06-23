@@ -24,8 +24,6 @@ public abstract class Case extends Observable {
         this.visible = false;
         this.neighbors = new ArrayList();
     }
-    
-    abstract void propagate();
 
     public int getValue() {
         return value;
@@ -111,6 +109,26 @@ public abstract class Case extends Observable {
         {
             long longValue = neighbors.stream().filter(t -> t.getValue() == -1).count();
             value = (int)longValue;
+        }
+    }
+    
+    private void propagate()
+    {
+        if(!flaged)
+        {
+            // Affichage de la case si elle est piégée
+            if(this.getValue() == -1)
+            {
+                value = -2;
+                this.makeVisible();
+            }
+            // Sinon on propage seulement les cases normalement
+            else if(this.makeVisible() && value == 0)
+            {
+                neighbors.stream().filter((neighbor) -> (!neighbor.isVisible() && neighbor.getValue()!= -1)).forEach((neighbor) -> {
+                    neighbor.propagateClick();
+                });
+            }
         }
     }
 }
