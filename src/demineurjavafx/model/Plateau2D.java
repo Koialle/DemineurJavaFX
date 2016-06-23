@@ -2,6 +2,7 @@
 package demineurjavafx.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -10,8 +11,8 @@ import java.util.List;
  */
 public class Plateau2D extends Plateau {
 
-    // HashMap
-    private Case2D[][] grille;
+    private HashMap<Case, int[]> gridCoordinates;
+    private Case[][] gridCases;
     
     public Plateau2D() {
         super();
@@ -26,7 +27,8 @@ public class Plateau2D extends Plateau {
     
     @Override
     public void initializePlateau() {
-        grille = new Case2D[size.getX()][size.getY()];
+        gridCases = new Case[size.getX()][size.getY()];
+        gridCoordinates = new HashMap();//new Case[size.getX()][size.getY()];
         for(int x = 0; x < size.getX(); x++)
         {
             for(int y = 0; y < size.getY(); y++)
@@ -38,8 +40,9 @@ public class Plateau2D extends Plateau {
                     value = -1;
                     nbMines++;
                 }
-                Case2D c = new Case2D(x, y, value);
-                grille[x][y] = c;
+                Case c = new Case(value);
+                gridCoordinates.put(c, new int[]{x,y});
+                gridCases[x][y] = c;
             }
         }
         nbMinesLeft = nbMines;
@@ -51,7 +54,7 @@ public class Plateau2D extends Plateau {
     @Override
     public List<Case> getNeighbors(Case c)
     {
-        int x = ((Case2D)c).getX(), y = ((Case2D)c).getY();
+        int[] coordinates = gridCoordinates.get(c);
         List<Case> neighbors = new ArrayList();
         int[] v = new int[]{
             -1, 1,
@@ -70,12 +73,12 @@ public class Plateau2D extends Plateau {
             int dx = v[i];
             int dy = v[++i];
             
-            int vx = x+dx;
-            int vy = y+dy;
+            int vx = coordinates[0]+dx;
+            int vy = coordinates[1]+dy;
             
             if(vx >= 0 && vx < size.getX() && vy >= 0 && vy < size.getY())
             {
-                neighbors.add(grille[vx][vy]);
+                neighbors.add(gridCases[vx][vy]);
             }
         }
         return neighbors;
@@ -88,7 +91,7 @@ public class Plateau2D extends Plateau {
         {
             for(int y = 0; y < size.getY(); y++)
             {
-                if(grille[x][y].getValue() == -1) grille[x][y].makeVisible();
+                if(gridCases[x][y].getValue() == -1) gridCases[x][y].makeVisible();
             }
         }
     }
@@ -101,7 +104,7 @@ public class Plateau2D extends Plateau {
         {
             for(int y = 0; y < size.getY(); y++)
             {
-                if(grille[x][y].isFlaged()) i++;
+                if(gridCases[x][y].isFlaged()) i++;
             }
         }
         nbMinesLeft = nbMines - i;
@@ -118,13 +121,13 @@ public class Plateau2D extends Plateau {
         {
             for(int y = 0; y < size.getY(); y++)
             {
-                if(grille[x][y].isFlaged() || grille[x][y].isVisible()) i++;
+                if(gridCases[x][y].isFlaged() || gridCases[x][y].isVisible()) i++;
             }
         }
         return i;
     }
     
     public Case[][] getGrille() {
-        return grille;
+        return gridCases;
     }
 }

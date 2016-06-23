@@ -2,7 +2,6 @@
 package demineurjavafx.view;
 
 import demineurjavafx.model.Case;
-import demineurjavafx.model.Case2D;
 import java.util.Observable;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -17,7 +16,7 @@ import javafx.scene.text.TextAlignment;
  */
 public class CaseView2D extends CaseView {
 
-    private final Rectangle rectangle; // Rectangle spécifique à Case2D, pour une case 3D on utilisera 
+    private final Rectangle rectangle; // Rectangle spécifique à une Case en 2D, pour une case 3D on utilisera 
                                        // probablement autre chose, ou plusieurs rectangles...
     
     public CaseView2D(int size)
@@ -48,10 +47,8 @@ public class CaseView2D extends CaseView {
     {
         if(c instanceof Case)
         {
-            Case2D c2D = (Case2D)c;
-            
             this.getChildren().clear();
-            if(c2D.isFlaged())
+            if(c.isFlaged())
             {
                 ImageView ivFlag = new ImageView();
                 ivFlag.setImage(flagImage);
@@ -64,11 +61,11 @@ public class CaseView2D extends CaseView {
             {
                 root.getChildren().clear();
                 text.setText("");
-                if(c2D.isVisible())
+                if(c.isVisible())
                 {
                     rectangle.setFill(Color.LIGHTGREY);
                     root.getChildren().add(rectangle);
-                    int caseValue = c2D.getValue();
+                    int caseValue = c.getValue();
                     
                     if(caseValue < 0) // -1 & -2 : Case est une bombe
                     {

@@ -2,7 +2,6 @@
 package demineurjavafx.view;
 
 import demineurjavafx.model.Case;
-import demineurjavafx.model.Case2D;
 import demineurjavafx.model.Plateau.GameState;
 import demineurjavafx.model.Plateau2D;
 import java.util.Observable;
@@ -36,7 +35,7 @@ public class PlateauView2D extends PlateauView {
         
         int xCases = plateau.getSize().getX();
         int yCases = plateau.getSize().getY();
-        Case2D[][] grilleCase = (Case2D[][]) ((Plateau2D)plateau).getGrille();
+        Case[][] grilleCase = ((Plateau2D)plateau).getGrille();
         for(int x = 0; x < xCases; x++)
         {
             for(int y = 0; y < yCases; y++)

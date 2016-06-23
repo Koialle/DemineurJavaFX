@@ -9,7 +9,7 @@ import java.util.Observable;
  *
  * @author Ophélie EOUZAN
  */
-public abstract class Case extends Observable {
+public class Case extends Observable {
     protected int value;
     protected boolean flaged;
     protected boolean visible;
