@@ -24,36 +24,7 @@ public class Case extends Observable {
         this.visible = false;
         this.neighbors = new ArrayList();
     }
-
-    public int getValue() {
-        return value;
-    }
     
-    public void setValue(int value) {
-        this.value = value;
-    }
-
-    public boolean isFlaged() {
-        return flaged;
-    }
-
-    public boolean isVisible() {
-        return visible;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-    }
-    
-    public List<? extends Case> getNeighbors()
-    {
-        return neighbors;
-    }
-
-    public void setNeighbors(List<? extends Case> neighbors) {
-        this.neighbors = neighbors;
-    }
-
     /**
      * Rend la case visible si elle ne l'était pas déjà et si elle n'a ps de drapeau.
      * @return true si la case est devenue visible, false sinon
@@ -104,7 +75,7 @@ public class Case extends Observable {
     /**
      * Calcule le nombre de voisines minées de la case si la case elle-même n'est pas piégée.
      */
-    private void calculateValue() {
+    protected void calculateValue() {
         if(value != -1)
         {
             long longValue = neighbors.stream().filter(t -> t.getValue() == -1).count();
@@ -112,7 +83,11 @@ public class Case extends Observable {
         }
     }
     
-    private void propagate()
+    
+    /**
+     * Propagation récursive du dévoilement des cases voisines.
+     */
+    protected void propagate()
     {
         if(!flaged)
         {
@@ -126,9 +101,38 @@ public class Case extends Observable {
             else if(this.makeVisible() && value == 0)
             {
                 neighbors.stream().filter((neighbor) -> (!neighbor.isVisible() && neighbor.getValue()!= -1)).forEach((neighbor) -> {
-                    neighbor.propagateClick();
+                    neighbor.propagate();
                 });
             }
         }
+    }
+
+    public int getValue() {
+        return value;
+    }
+    
+    public void setValue(int value) {
+        this.value = value;
+    }
+
+    public boolean isFlaged() {
+        return flaged;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+    
+    public List<? extends Case> getNeighbors()
+    {
+        return neighbors;
+    }
+
+    public void setNeighbors(List<? extends Case> neighbors) {
+        this.neighbors = neighbors;
     }
 }

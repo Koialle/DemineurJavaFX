@@ -71,10 +71,12 @@ abstract public class Plateau extends Observable {
     
     abstract public void initializePlateau();
     abstract public List<Case> getNeighbors(Case c);
-//    abstract public void propagateClick(Case c);
     abstract public void propagateExplosion();
     abstract public void updateNbMinesLeft();
     abstract public int getNbCaseVisibleOrFlaged();
+    
+    // Extension 1 : Propagation en croix
+    abstract public List<Case> getCrossNeighbors(Case c);
 
     public int getSecondesExoulees() {
         return secondesEcoulees;

@@ -4,7 +4,6 @@ package demineurjavafx.view;
 import demineurjavafx.model.Case;
 import demineurjavafx.model.Plateau.GameState;
 import demineurjavafx.model.Plateau2D;
-import java.util.Observable;
 import javafx.geometry.Pos;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -66,10 +65,5 @@ public class PlateauView2D extends PlateauView {
             }
         }
         playboard.getChildren().add(gridboard);
-    }
-    
-    @Override
-    public void update(Observable o, Object arg) {
-        super.update(o, arg); // Ainsi le plateau 3D pourra surcharger
     }
 }
