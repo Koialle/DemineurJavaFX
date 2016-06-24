@@ -111,6 +111,8 @@ abstract public class Plateau extends Observable implements PlateauCroix {
         // Vérification que la partie est gagnée.
         int nbCasesPlateau = size.getX() * size.getY();
         if(this.getNbCaseVisibleOrFlaged() == nbCasesPlateau && this.getNbMinesLeft() == 0) this.gameState = GameState.Win;
+        this.setChanged();
+        this.notifyObservers(null);
     }
     
     public void startTimer()

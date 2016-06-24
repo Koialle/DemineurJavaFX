@@ -72,6 +72,7 @@ abstract public class CaseView extends Parent implements Observer {
     {
         if(c.isFlaged()) {
             this.getChildren().clear();
+            root.getChildren().clear();
             root.getChildren().add(flagImageView);
             this.getChildren().add(root);
         }

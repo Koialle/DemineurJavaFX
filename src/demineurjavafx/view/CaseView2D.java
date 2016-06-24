@@ -46,10 +46,6 @@ public class CaseView2D extends CaseView {
     @Override
     protected void createCaseView(Case c)
     {
-        if(c instanceof CaseCroix) {
-            c = (CaseCroix)c;
-        }
-        
         this.getChildren().clear();
         super.createCaseView(c);
         if(!c.isFlaged()) 

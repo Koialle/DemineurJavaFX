@@ -78,7 +78,7 @@ public class Plateau2D extends Plateau {
         }
         this.gameState = GameState.Lost;
         this.setChanged();
-        this.notifyObservers(null);
+        this.notifyObservers();
     }
 
     @Override
