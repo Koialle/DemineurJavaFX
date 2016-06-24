@@ -10,7 +10,9 @@ import java.util.TimerTask;
  *
  * @author Ophélie EOUZAN
  */
-abstract public class Plateau extends Observable {
+abstract public class Plateau extends Observable implements PlateauCroix {
+    
+    private boolean caseCroix = false;
     
     protected int secondesEcoulees = 0;
     protected int nbMines = 0;
@@ -21,7 +23,7 @@ abstract public class Plateau extends Observable {
     protected Size size = Size.Small;
     
     protected Timer timer;
-    
+
     public static enum GameState
     {
         None,
@@ -137,5 +139,15 @@ abstract public class Plateau extends Observable {
         if (seconde < 10) sec += "0";
         
         return min+minute + ":" + sec+seconde;	
+    }
+    
+    @Override
+    public boolean getCaseCroix() {
+        return this.caseCroix;
+    }
+    
+    @Override
+    public void setCaseCroix(boolean value) {
+        this.caseCroix = value;
     }
 }
