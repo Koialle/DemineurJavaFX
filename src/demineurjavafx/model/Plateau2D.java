@@ -46,7 +46,7 @@ public class Plateau2D extends Plateau {
         nbMinesLeft = nbMines;
                         
         this.setChanged();
-        this.notifyObservers();
+        this.notifyObservers(this);
     }
     
     @Override
@@ -73,7 +73,7 @@ public class Plateau2D extends Plateau {
         {
             for(int y = 0; y < size.getY(); y++)
             {
-                if(gridCases[x][y].isTrapped()) gridCases[x][y].makeVisible();
+                if(gridCases[x][y].isTrapped()) gridCases[x][y].makeVisible(); // setChanged() et notify() dans Case.makeVisible, et plateau observe les cases
             }
         }
     }
@@ -91,8 +91,8 @@ public class Plateau2D extends Plateau {
         }
         nbMinesLeft = nbMines - i;
         
-//        this.setChanged();
-//        this.notifyObservers();
+        this.setChanged();
+        this.notifyObservers(null);
     }
     
     @Override

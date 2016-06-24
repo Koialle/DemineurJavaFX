@@ -104,7 +104,7 @@ abstract public class Plateau extends Observable implements PlateauCroix {
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
         this.setChanged();
-        this.notifyObservers();
+        this.notifyObservers(null);
     }
     
     public void startTimer()
@@ -116,8 +116,8 @@ abstract public class Plateau extends Observable implements PlateauCroix {
                 if(gameState == GameState.Playing)
                 {
                     secondesEcoulees++;
-//                    setChanged();
-//                    notifyObservers();
+                    setChanged();
+                    notifyObservers(null);
                 }
                 else timer.cancel();
             }
@@ -138,7 +138,7 @@ abstract public class Plateau extends Observable implements PlateauCroix {
         if (minute < 10) min += "0";
         if (seconde < 10) sec += "0";
         
-        return min+minute + ":" + sec+seconde;	
+        return min+minute + ":" + sec+seconde;
     }
     
     @Override

@@ -84,21 +84,7 @@ abstract public class PlateauView extends Parent implements Observer {
                 plateau.propagateExplosion(); // On dévoile toutes les mines
             }
         });
-        timerStatut = new StatutBox("");
-        timer = new Timer(false);
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                // Tant que le jeu est en cours
-                if(plateau.getGameState() == GameState.Playing)
-                {
-                    // On met à jour le compteur
-                    timerStatut.setText(plateau.getMinuteSecondeFormat());
-                    // NOTE: La TimerTask aurait pu être éviteée au moyen de notifiers dans la méthode
-                }
-                else timer.cancel();
-            }
-        }, 0, 1000);
+        timerStatut = new StatutBox(plateau.getMinuteSecondeFormat());
         
         statusboard.setLeft(flagStatut);
         statusboard.setCenter(smileyButton);
@@ -145,7 +131,7 @@ abstract public class PlateauView extends Parent implements Observer {
         else if(o instanceof Plateau)
         {
             GameState gameState = plateau.getGameState();
-            if(gameState == GameState.Playing)
+            if(arg instanceof Plateau) // Cas de l'initialisation
             {
                 // On rentre dans cette condition seulement 1 fois, 
                 // lors de l'initialisation des cases du plateau
@@ -153,25 +139,34 @@ abstract public class PlateauView extends Parent implements Observer {
                 this.flagStatut.setText(String.valueOf(plateau.getNbMinesLeft()));
                 this.timerStatut.setText(plateau.getMinuteSecondeFormat());
             }
-            else
+            else // Cas des attributs du plateau après initialisation
             {
-                // End MESSAGE
-                playboard.getChildren().remove(messageFin);
-                if(gameState == GameState.Lost)
+                if(plateau.getGameState() == GameState.Playing)
                 {
-                    buttonView.setImage(deadSmiley);
-                    
-                    messageFin.setText("PERDU");
-                    messageFin.setFill(Color.RED);
+                    // On met à jour le compteur
+                    timerStatut.setText(plateau.getMinuteSecondeFormat());
+                    // NOTE: La TimerTask aurait pu être éviteée au moyen de notifiers dans la méthode
                 }
-                else if(gameState == GameState.Win)
+                else
                 {
-                    buttonView.setImage(happySmiley);
+                    // End MESSAGE
+                    playboard.getChildren().remove(messageFin);
+                    if(gameState == GameState.Lost)
+                    {
+                        buttonView.setImage(deadSmiley);
 
-                    messageFin.setText("BRAVO");
-                    messageFin.setFill(Color.GREEN);
+                        messageFin.setText("PERDU");
+                        messageFin.setFill(Color.RED);
+                    }
+                    else if(gameState == GameState.Win)
+                    {
+                        buttonView.setImage(happySmiley);
+
+                        messageFin.setText("BRAVO");
+                        messageFin.setFill(Color.GREEN);
+                    }
+                    playboard.getChildren().add(messageFin);
                 }
-                playboard.getChildren().add(messageFin);
             }
         }
     }
