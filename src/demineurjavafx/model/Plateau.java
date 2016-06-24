@@ -75,7 +75,7 @@ abstract public class Plateau extends Observable implements PlateauCroix {
     abstract public List<Case> getNeighbors(Case c);
     abstract public void propagateExplosion();
     abstract public void updateNbMinesLeft();
-    abstract public int getNbCaseVisibleOrFlaged();
+    abstract protected int getNbCaseVisibleOrFlaged();
 
     public int getSecondesExoulees() {
         return secondesEcoulees;
@@ -105,6 +105,12 @@ abstract public class Plateau extends Observable implements PlateauCroix {
         this.gameState = gameState;
         this.setChanged();
         this.notifyObservers(null);
+    }
+    
+    public void updateGameStateIfWin(){
+        // Vérification que la partie est gagnée.
+        int nbCasesPlateau = size.getX() * size.getY();
+        if(this.getNbCaseVisibleOrFlaged() == nbCasesPlateau && this.getNbMinesLeft() == 0) this.gameState = GameState.Win;
     }
     
     public void startTimer()

@@ -112,61 +112,53 @@ abstract public class PlateauView extends Parent implements Observer {
         if(o instanceof Case) // Case devrait être générique, donc on peut l'utiliser dans la vue générique
         {
             Case c = (Case)o;
-            // Si la case cachée est une bombe
-            if(c.isVisible() && c.isTrapped()) {
+            
+            if(c.isVisible() && c.isTrapped()) { // Si la case est une bombe
                 // On perd la partie
                 plateau.propagateExplosion();
-                plateau.setGameState(GameState.Lost);
-            // Sinon
-            } else {
+            
+            } else { // Sinon
                 // On notifie le modèle qu'il doit mettre à jour son compteur de drapeaux
                 plateau.updateNbMinesLeft();
-                flagStatut.setText(String.valueOf(plateau.getNbMinesLeft()));
                 
                 // Vérification que la partie est gagnée.
-                int nbCasesPlateau = plateau.getSize().getX() * plateau.getSize().getY();
-                if(plateau.getNbCaseVisibleOrFlaged() == nbCasesPlateau && plateau.getNbMinesLeft() == 0) plateau.setGameState(GameState.Win);
+                plateau.updateGameStateIfWin();
             }
         }
-        else if(o instanceof Plateau)
+        else if(o instanceof Plateau && arg instanceof Plateau) // Cas de l'initialisation
+        { 
+            // On rentre dans cette condition seulement 1 fois, 
+            // lors de l'initialisation des cases du plateau
+            this.createView();
+        } 
+        else // Cas des attributs du plateau après initialisation
         {
             GameState gameState = plateau.getGameState();
-            if(arg instanceof Plateau) // Cas de l'initialisation
+            if(plateau.getGameState() == GameState.Playing)
             {
-                // On rentre dans cette condition seulement 1 fois, 
-                // lors de l'initialisation des cases du plateau
-                this.createView();
+                // On met à jour les indicateurs
+                timerStatut.setText(plateau.getMinuteSecondeFormat());
                 this.flagStatut.setText(String.valueOf(plateau.getNbMinesLeft()));
-                this.timerStatut.setText(plateau.getMinuteSecondeFormat());
             }
-            else // Cas des attributs du plateau après initialisation
+            else
             {
-                if(plateau.getGameState() == GameState.Playing)
+                // End MESSAGE
+                playboard.getChildren().remove(messageFin);
+                if(gameState == GameState.Lost)
                 {
-                    // On met à jour le compteur
-                    timerStatut.setText(plateau.getMinuteSecondeFormat());
-                    // NOTE: La TimerTask aurait pu être éviteée au moyen de notifiers dans la méthode
+                    buttonView.setImage(deadSmiley);
+
+                    messageFin.setText("PERDU");
+                    messageFin.setFill(Color.RED);
                 }
-                else
+                else if(gameState == GameState.Win)
                 {
-                    // End MESSAGE
-                    playboard.getChildren().remove(messageFin);
-                    if(gameState == GameState.Lost)
-                    {
-                        buttonView.setImage(deadSmiley);
+                    buttonView.setImage(happySmiley);
 
-                        messageFin.setText("PERDU");
-                        messageFin.setFill(Color.RED);
-                    }
-                    else if(gameState == GameState.Win)
-                    {
-                        buttonView.setImage(happySmiley);
-
-                        messageFin.setText("BRAVO");
-                        messageFin.setFill(Color.GREEN);
-                    }
-                    playboard.getChildren().add(messageFin);
+                    messageFin.setText("BRAVO");
+                    messageFin.setFill(Color.GREEN);
                 }
+                playboard.getChildren().add(messageFin);
             }
         }
     }

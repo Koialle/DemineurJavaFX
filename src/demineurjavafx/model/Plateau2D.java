@@ -76,6 +76,9 @@ public class Plateau2D extends Plateau {
                 if(gridCases[x][y].isTrapped()) gridCases[x][y].makeVisible(); // setChanged() et notify() dans Case.makeVisible, et plateau observe les cases
             }
         }
+        this.gameState = GameState.Lost;
+        this.setChanged();
+        this.notifyObservers(null);
     }
 
     @Override
@@ -96,7 +99,7 @@ public class Plateau2D extends Plateau {
     }
     
     @Override
-    public int getNbCaseVisibleOrFlaged()
+    protected int getNbCaseVisibleOrFlaged()
     {
         int i = 0;
         for(int x = 0; x < size.getX(); x++)
