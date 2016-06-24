@@ -8,7 +8,7 @@ package demineurjavafx.model;
 public class CaseCroix extends Case {
 
     public CaseCroix() {
-        super(0); // Pas de valeur
+        super(false);
     }
     
     @Override
@@ -17,10 +17,22 @@ public class CaseCroix extends Case {
         // Affichage de la case
         if(!flaged && this.makeVisible())
         {
-            neighbors.stream().filter((neighbor) -> (!neighbor.isVisible() && neighbor.getValue()!= -1)).forEach((neighbor) -> {
-                neighbor.propagate();
+            neighbors.stream().filter((neighbor) -> (!neighbor.isVisible())).forEach((neighbor) -> {
+                if(neighbor.isTrapped()) neighbor.putFlag();
+                else neighbor.makeVisible();
             });
         }
     }
     
+    @Override
+    public boolean makeVisible() { // Utiliser un indice de propagation pour connaitre qui est déclencheur : boolean triggerVisible
+//        if(!this.flaged && !this.visible)
+//        {
+//            this.visible = true;
+//            this.setChanged();
+//            this.notifyObservers();
+//            return true;
+//        }
+        return false;
+    }
 }

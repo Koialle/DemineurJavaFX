@@ -2,6 +2,7 @@
 package demineurjavafx.view;
 
 import demineurjavafx.model.Case;
+import demineurjavafx.model.CaseCroix;
 import java.util.Observable;
 import java.util.Observer;
 import javafx.scene.Parent;
@@ -25,15 +26,39 @@ abstract public class CaseView extends Parent implements Observer {
     protected final int size;
     
     protected final Image flagImage;
+    protected final ImageView flagImageView;
+    
+    // Extension CaseCroix
+    protected final Image crossImage;
+    protected final ImageView crossImageView;
     
     public CaseView(int size)
     {
         this.size = size;
+        
+        // Text
         text = new Text();
         text.setFont(Font.font(null, FontWeight.BOLD, 25));
         text.setTextAlignment(TextAlignment.CENTER);
         text.setText("");
+        
+        // Images
         flagImage = new Image("/demineurjavafx/resources/images/demineur-flag.png");
+        
+        flagImageView = new ImageView();
+        flagImageView.setImage(flagImage);
+        flagImageView.setFitHeight(size-1);
+        flagImageView.setPreserveRatio(true);
+//        buttonView.setCache(true);
+        
+        // Extension CaseCroix
+        crossImage = new Image("/demineurjavafx/resources/images/cross.png");
+        
+        crossImageView = new ImageView();
+        crossImageView.setImage(crossImage);
+        crossImageView.setFitHeight(size-1);
+        crossImageView.setPreserveRatio(true);
+//        buttonView.setCache(true);
 
         this.getChildren().add(root);
     }
@@ -43,21 +68,25 @@ abstract public class CaseView extends Parent implements Observer {
         this.createCaseView((Case) o);
     }
     
-    abstract void createCaseView(Case c);
+    protected void createCaseView(Case c)
+    {
+        if(c.isFlaged()) {
+            this.getChildren().clear();
+            root.getChildren().add(flagImageView);
+            this.getChildren().add(root);
+        }
+    }
     
-    protected void updateText(Case c)
+    protected void updateTextView(Case c)
     {
         text.setText("");
         if(c.isVisible())
         {
             int caseValue = c.getValue();
-            if(caseValue < 0) // -1 & -2 : Case est une bombe
-            {
+            if(c.isTrapped() || c.isTrigger()) { // Case est une bombe
                 text.setText("X");
                 text.setFill(Color.BLACK);
-            }
-            else if(caseValue > 0)
-            {
+            } else if (!c.isEmpty()) {
                 text.setText(String.valueOf(caseValue));
                 if(caseValue == 1) text.setFill(Color.BLUE);
                 if(caseValue == 2) text.setFill(Color.GREEN);

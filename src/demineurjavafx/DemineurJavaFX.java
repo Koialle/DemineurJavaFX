@@ -5,9 +5,12 @@ import demineurjavafx.model.Plateau.Difficulty;
 import demineurjavafx.model.Plateau.Size;
 import demineurjavafx.model.Plateau2D;
 import demineurjavafx.view.PlateauView2D;
+import java.util.List;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -27,6 +30,11 @@ public class DemineurJavaFX extends Application {
     
     private Size size;
     private Difficulty difficulty;
+    private boolean caseX = false;
+    
+    private final String[] tailles = new String[]{"10 x 10", "15 x 10", "15 x 15", "20 x 20"};
+    private final String[] difficultes = new String[]{"Facile", "Moyen", "Difficile", "Expert"};
+//    private final String[] extensions = new String[]{"CaseX"};
     
     @Override
     public void start(Stage primaryStage) {
@@ -40,29 +48,27 @@ public class DemineurJavaFX extends Application {
         Menu menuOptions = new Menu("Options");
         Menu menuTaille = new Menu("Taille");
         Menu menuDifficulte = new Menu("Difficulté");
-        Menu menuExtensions = new Menu("Extensions");
+        Menu menuExtension = new Menu("Extension");
         
         // Taille de la fenètre de démineur
         final ToggleGroup groupTaille = new ToggleGroup();
-        for (String taille : new String[]{"10 x 10", "15 x 10", "15 x 15", "20 x 20"}) {
-            RadioMenuItem itemTaille = new RadioMenuItem(taille);
-            itemTaille.setUserData(taille);
-            itemTaille.setToggleGroup(groupTaille);
-            menuTaille.getItems().add(itemTaille);
+        for (String taille : tailles) {
+            this.createRadioMenuItem(taille, groupTaille,menuTaille);
         }
         groupTaille.getToggles().get(0).setSelected(true);
         menuOptions.getItems().addAll(menuTaille);
         
         // Difficulté de la partie de démineur
         final ToggleGroup groupDifficulte = new ToggleGroup();
-        for (String difficulte : new String[]{"Facile", "Moyen", "Difficile", "Expert"}) {
-            RadioMenuItem itemDifficulte = new RadioMenuItem(difficulte);
-            itemDifficulte.setUserData(difficulte);
-            itemDifficulte.setToggleGroup(groupDifficulte);
-            menuDifficulte.getItems().add(itemDifficulte);
+        for (String difficulte : difficultes) {
+            this.createRadioMenuItem(difficulte, groupDifficulte, menuDifficulte);
         }
         groupDifficulte.getToggles().get(0).setSelected(true);
         menuOptions.getItems().addAll(menuDifficulte);
+        
+        // Extension(s)
+        CheckMenuItem crossCaseItem = this.createCheckRadioItem("CaseX", menuExtension);
+        menuOptions.getItems().addAll(menuExtension);
         
         // Menu d'actions
         Menu menu = new Menu("Menu");
@@ -82,6 +88,8 @@ public class DemineurJavaFX extends Application {
             layoutPartie.setFillWidth(true);
             
             Plateau2D plateau = new Plateau2D(size, difficulty);
+            plateau.setCaseCroix(crossCaseItem.isSelected());
+            
             PlateauView2D plateauView = new PlateauView2D(plateau);
             plateau.addObserver(plateauView);
             plateau.initializePlateau();
@@ -161,5 +169,29 @@ public class DemineurJavaFX extends Application {
                 difficulty = Difficulty.Easy;
                 break;
         }
+    }
+
+    private RadioMenuItem createRadioMenuItem(String text, ToggleGroup toggleGroup, Menu menu)
+    {
+        RadioMenuItem radioItem = new RadioMenuItem(text);
+        radioItem.setUserData(text);
+        radioItem.setToggleGroup(toggleGroup);
+        menu.getItems().add(radioItem);
+        
+        return radioItem;
+    }
+    
+    private CheckMenuItem createCheckRadioItem(String text, Menu menu)
+    {
+        CheckMenuItem checkItem = new CheckMenuItem(text);
+        checkItem.setUserData(text);
+        menu.getItems().add(checkItem);
+        return checkItem;
+//        checkItem.selectedProperty().addListener(new ChangeListener<Boolean>() {
+//            public void changed(ObservableValue ov,
+//            Boolean old_val, Boolean new_val) {
+//                node.setVisible(new_val);
+//            }
+//        });
     }
 }

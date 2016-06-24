@@ -9,27 +9,88 @@ import java.util.Observable;
  *
  * @author Ophélie EOUZAN
  */
-public class Case extends Observable {
-    protected int value;
-    protected boolean flaged;
-    protected boolean visible;
+public class Case extends Observable 
+{    
+    protected boolean trapped;
+    protected int value = 0;
+    protected boolean flaged = false;
+    protected boolean visible = false;
+    protected boolean trigger = false;
     
     protected List<? extends Case> neighbors;
     
-    public Case(int value)
+    /* Constructeur(s) */
+    
+    public Case(boolean trapped)
     {
-        this.value = value;
+        this.trapped = trapped;
         
+        this.value = 0;
         this.flaged = false; // Une case marquée ne peut être découverte ?
         this.visible = false;
         this.neighbors = new ArrayList();
+    }
+    
+    /* Méthodes */
+    
+    /**
+     * Initialise les voisins et la valeur de la case.
+     * @param neighbors 
+     */
+    public void initializeCaseNeighbors(List<? extends Case> neighbors)
+    {
+        this.neighbors = neighbors;
+        this.calculateValue();
+    }
+    
+    /**
+     * Calcule le nombre de voisines minées de la case si la case elle-même n'est pas piégée.
+     */
+    protected void calculateValue() {
+        if(!this.trapped)
+        {
+            long longValue = neighbors.stream().filter(t -> t.isTrapped()).count();
+            value = (int)longValue;
+        }
+    }
+    
+    /**
+     * Propage le clic récursivement puis notification aux observers.
+     */
+    public void propagateClick() {
+        this.propagate();
+        this.setChanged();
+        this.notifyObservers();
+    }
+    
+    /**
+     * Propagation récursive du dévoilement des cases voisines.
+     */
+    protected void propagate()
+    {
+        if(!this.flaged)
+        {
+            // Affichage de la case si elle est piégée
+            if(this.trapped)
+            {
+                this.trigger = true; // Case déclencheuse
+                this.makeVisible();
+            }
+            // Sinon on propage seulement les cases normalement
+            else if(this.makeVisible() && this.value == 0)
+            {
+                neighbors.stream().filter((neighbor) -> (!neighbor.isVisible() && !neighbor.isTrapped())).forEach((neighbor) -> {
+                    neighbor.propagate();
+                });
+            }
+        }
     }
     
     /**
      * Rend la case visible si elle ne l'était pas déjà et si elle n'a ps de drapeau.
      * @return true si la case est devenue visible, false sinon
      */
-    public boolean makeVisible() {
+    protected boolean makeVisible() {
         if(!this.flaged && !this.visible)
         {
             this.visible = true;
@@ -56,55 +117,21 @@ public class Case extends Observable {
         return false;
     }
     
-    public void propagateClick() {
-        this.propagate();
-        this.setChanged();
-        this.notifyObservers();
-    }
-
-    /**
-     * Initialise les voisins et la valeur de la case.
-     * @param neighbors 
-     */
-    public void initializeCaseNeighbors(List<? extends Case> neighbors)
+    /* Getters - Setters */
+    
+    public boolean isEmpty()
     {
-        this.neighbors = neighbors;
-        this.calculateValue();
+        return (value == 0);
     }
     
-    /**
-     * Calcule le nombre de voisines minées de la case si la case elle-même n'est pas piégée.
-     */
-    protected void calculateValue() {
-        if(value != -1)
-        {
-            long longValue = neighbors.stream().filter(t -> t.getValue() == -1).count();
-            value = (int)longValue;
-        }
-    }
-    
-    
-    /**
-     * Propagation récursive du dévoilement des cases voisines.
-     */
-    protected void propagate()
+    public boolean isTrapped()
     {
-        if(!flaged)
-        {
-            // Affichage de la case si elle est piégée
-            if(this.getValue() == -1)
-            {
-                value = -2;
-                this.makeVisible();
-            }
-            // Sinon on propage seulement les cases normalement
-            else if(this.makeVisible() && value == 0)
-            {
-                neighbors.stream().filter((neighbor) -> (!neighbor.isVisible() && neighbor.getValue()!= -1)).forEach((neighbor) -> {
-                    neighbor.propagate();
-                });
-            }
-        }
+        return this.trapped;
+    }
+    
+    public boolean isTrigger()
+    {
+        return this.trigger;
     }
 
     public int getValue() {

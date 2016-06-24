@@ -2,6 +2,7 @@
 package demineurjavafx.view;
 
 import demineurjavafx.model.Case;
+import demineurjavafx.model.CaseCroix;
 import demineurjavafx.model.Plateau.GameState;
 import demineurjavafx.model.Plateau2D;
 import javafx.geometry.Pos;
@@ -44,8 +45,10 @@ public class PlateauView2D extends PlateauView {
                 // Setting neighbors and value of case
                 c.initializeCaseNeighbors(plateau.getNeighbors(c));
                 
+                // Setting case view
+                CaseView cView = new CaseView2D(CASE_SIZE);
+                
                 // Setting listeners
-                CaseView2D cView = new CaseView2D(CASE_SIZE);
                 cView.setOnMouseClicked((MouseEvent t) -> {
                     // Jeu en cours
                     if(plateau.getGameState() == GameState.Playing)

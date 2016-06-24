@@ -127,7 +127,7 @@ abstract public class PlateauView extends Parent implements Observer {
         {
             Case c = (Case)o;
             // Si la case cachée est une bombe
-            if(c.isVisible() && c.getValue() < 0) {
+            if(c.isVisible() && c.isTrapped()) {
                 // On perd la partie
                 plateau.propagateExplosion();
                 plateau.setGameState(GameState.Lost);
@@ -135,7 +135,7 @@ abstract public class PlateauView extends Parent implements Observer {
             } else {
                 // On notifie le modèle qu'il doit mettre à jour son compteur de drapeaux
                 plateau.updateNbMinesLeft();
-                this.flagStatut.setText(String.valueOf(plateau.getNbMinesLeft()));
+                flagStatut.setText(String.valueOf(plateau.getNbMinesLeft()));
                 
                 // Vérification que la partie est gagnée.
                 int nbCasesPlateau = plateau.getSize().getX() * plateau.getSize().getY();
