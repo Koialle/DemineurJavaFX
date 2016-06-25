@@ -32,6 +32,11 @@ abstract public class Plateau extends Observable implements PlateauCroix {
         Win
     }
     
+    public static enum Size
+    {
+        Small, Medium, Big, Large;
+    }
+    
     public static enum Difficulty
     {
         Easy(0.1),
@@ -48,33 +53,11 @@ abstract public class Plateau extends Observable implements PlateauCroix {
         }
     }
     
-    public static enum Size
-    {
-        Small(10,10),
-        Medium(15,10),
-        Big(15,15),
-        Large(20,20);
-
-        private final int x;
-        private final int y;
-        Size(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-        public int getX()
-        {
-            return x;
-        }
-        public int getY()
-        {
-            return y;
-        }
-    }
-    
     abstract public void initializePlateau();
     abstract public List<Case> getNeighbors(Case c);
     abstract public void propagateExplosion();
     abstract public void updateNbMinesLeft();
+    abstract public void updateGameStateIfWin();
     abstract protected int getNbCaseVisibleOrFlaged();
 
     public int getSecondesExoulees() {
@@ -103,14 +86,6 @@ abstract public class Plateau extends Observable implements PlateauCroix {
 
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
-        this.setChanged();
-        this.notifyObservers(null);
-    }
-    
-    public void updateGameStateIfWin(){
-        // Vérification que la partie est gagnée.
-        int nbCasesPlateau = size.getX() * size.getY();
-        if(this.getNbCaseVisibleOrFlaged() == nbCasesPlateau && this.getNbMinesLeft() == 0) this.gameState = GameState.Win;
         this.setChanged();
         this.notifyObservers(null);
     }

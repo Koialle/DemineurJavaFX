@@ -5,10 +5,8 @@ import demineurjavafx.model.Plateau.Difficulty;
 import demineurjavafx.model.Plateau.Size;
 import demineurjavafx.model.Plateau2D;
 import demineurjavafx.view.PlateauView2D;
-import java.util.List;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Menu;
@@ -30,7 +28,7 @@ public class DemineurJavaFX extends Application {
     
     private Size size;
     private Difficulty difficulty;
-    private boolean caseX = false;
+    private final boolean caseX = false;
     
     private final String[] tailles = new String[]{"10 x 10", "15 x 10", "15 x 15", "20 x 20"};
     private final String[] difficultes = new String[]{"Facile", "Moyen", "Difficile", "Expert"};

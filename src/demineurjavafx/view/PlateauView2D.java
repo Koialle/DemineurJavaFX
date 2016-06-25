@@ -20,8 +20,8 @@ public class PlateauView2D extends PlateauView {
     public PlateauView2D(Plateau2D plateau)
     {
         super(plateau);
-        width = plateau.getSize().getX() * CASE_SIZE;
-        height = plateau.getSize().getY() * CASE_SIZE;
+        width = plateau.getSizeX() * CASE_SIZE;
+        height = plateau.getSizeY() * CASE_SIZE;
     }
     
     @Override
@@ -32,8 +32,8 @@ public class PlateauView2D extends PlateauView {
         gridboard.setAlignment(Pos.CENTER);
         gridboard.setPrefSize(width, height);
         
-        int xCases = plateau.getSize().getX();
-        int yCases = plateau.getSize().getY();
+        int xCases = ((Plateau2D)plateau).getSizeX();
+        int yCases = ((Plateau2D)plateau).getSizeY();
         Case[][] grilleCase = ((Plateau2D)plateau).getGrille();
         for(int x = 0; x < xCases; x++)
         {

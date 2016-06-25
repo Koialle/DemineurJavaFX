@@ -10,9 +10,9 @@ import java.util.List;
  * @author Ophélie EOUZAN
  */
 public class Plateau2D extends Plateau {
-
     private HashMap<Case, int[]> gridCoordinates;
     private Case[][] gridCases;
+    private int sizeX, sizeY;
     
     public Plateau2D() {
         super();
@@ -22,18 +22,19 @@ public class Plateau2D extends Plateau {
     {
         this();
         this.size = size;
+        this.initializePlateauSize();
         this.difficulty = difficulty;
     }
     
     @Override
     public void initializePlateau() {
         // Initialisation des propriétés
-        gridCases = new Case[size.getX()][size.getY()];
+        gridCases = new Case[sizeX][sizeY];
         gridCoordinates = new HashMap();
 
-        for(int x = 0; x < size.getX(); x++)
+        for(int x = 0; x < sizeX; x++)
         {
-            for(int y = 0; y < size.getY(); y++)
+            for(int y = 0; y < sizeY; y++)
             {
                 boolean trapped = Math.random() < difficulty.getPercentage();
                 if(trapped) nbMines++;
@@ -69,9 +70,9 @@ public class Plateau2D extends Plateau {
     @Override
     public void propagateExplosion()
     {
-        for(int x = 0; x < size.getX(); x++)
+        for(int x = 0; x < sizeX; x++)
         {
-            for(int y = 0; y < size.getY(); y++)
+            for(int y = 0; y < sizeY; y++)
             {
                 if(gridCases[x][y].isTrapped()) gridCases[x][y].makeVisible(); // setChanged() et notify() dans Case.makeVisible, et plateau observe les cases
             }
@@ -85,9 +86,9 @@ public class Plateau2D extends Plateau {
     public void updateNbMinesLeft()
     {
         int i = 0;
-        for(int x = 0; x < size.getX(); x++)
+        for(int x = 0; x < sizeX; x++)
         {
-            for(int y = 0; y < size.getY(); y++)
+            for(int y = 0; y < sizeY; y++)
             {
                 if(gridCases[x][y].isFlaged()) i++;
             }
@@ -102,9 +103,9 @@ public class Plateau2D extends Plateau {
     protected int getNbCaseVisibleOrFlaged()
     {
         int i = 0;
-        for(int x = 0; x < size.getX(); x++)
+        for(int x = 0; x < sizeX; x++)
         {
-            for(int y = 0; y < size.getY(); y++)
+            for(int y = 0; y < sizeY; y++)
             {
                 if(gridCases[x][y].isFlaged() || gridCases[x][y].isVisible()) i++;
             }
@@ -114,6 +115,14 @@ public class Plateau2D extends Plateau {
     
     public Case[][] getGrille() {
         return gridCases;
+    }
+
+    public int getSizeX() {
+        return sizeX;
+    }
+
+    public int getSizeY() {
+        return sizeY;
     }
 
     /**
@@ -137,12 +146,21 @@ public class Plateau2D extends Plateau {
             int vx = coordinates[0]+dx;
             int vy = coordinates[1]+dy;
             
-            if(vx >= 0 && vx < size.getX() && vy >= 0 && vy < size.getY())
+            if(vx >= 0 && vx < sizeX && vy >= 0 && vy < sizeY)
             {
                 neighbors.add(gridCases[vx][vy]);
             }
         }
         return neighbors;
+    }
+    
+    @Override
+    public void updateGameStateIfWin(){
+        // Vérification que la partie est gagnée.
+        int nbCasesPlateau = sizeX * sizeY;
+        if(this.getNbCaseVisibleOrFlaged() == nbCasesPlateau && this.getNbMinesLeft() == 0) this.gameState = GameState.Win;
+        this.setChanged();
+        this.notifyObservers(null);
     }
 
     /* Implémentation de PlateauCroix (extension) */
@@ -152,10 +170,10 @@ public class Plateau2D extends Plateau {
         
         CaseCroix cc = new CaseCroix();
         Case[][] possibleCaseCroix;
-        int a, b, xSize = size.getX(), ySize = size.getY();
+        int a, b;
         
         // Réccupération des cases non minées et non vides
-        possibleCaseCroix = new Case[xSize][ySize];
+        possibleCaseCroix = new Case[sizeX][sizeY];
         gridCoordinates.entrySet().stream().filter((entry) -> (!entry.getKey().isTrapped() && !entry.getKey().isEmpty())).forEach((entry) -> {
             int x = entry.getValue()[0];
             int y = entry.getValue()[1];
@@ -163,8 +181,8 @@ public class Plateau2D extends Plateau {
         });
         
         // Génération d'index aléatoires
-        a = getRandomIntExclusive(0, xSize);
-        b = getRandomIntExclusive(0, ySize);
+        a = getRandomIntExclusive(0, sizeX);
+        b = getRandomIntExclusive(0, sizeY);
 
         // Remplacement des références
         gridCoordinates.remove(possibleCaseCroix[a][b]);
@@ -193,7 +211,7 @@ public class Plateau2D extends Plateau {
             int vx = coordinates[0]+dx;
             int vy = coordinates[1]+dy;
             
-            while(vx >= 0 && vx < size.getX() && vy >= 0 && vy < size.getY())
+            while(vx >= 0 && vx < sizeX && vy >= 0 && vy < sizeY)
             {
                 neighbors.add(gridCases[vx][vy]);
                 vx = coordinates[0]+dx;
@@ -210,5 +228,27 @@ public class Plateau2D extends Plateau {
     private int getRandomIntExclusive(int min, int max) {
         double value = Math.floor(Math.random() * (max - min)) + min;
         return (int)value;
+    }
+
+    private void initializePlateauSize() {
+        switch(this.size)
+        {
+            case Medium:
+                sizeX = 15;
+                sizeY = 10;
+                break;
+            case Big:
+                sizeX = 15;
+                sizeY = 15;
+                break;
+            case Large:
+                sizeX = 20;
+                sizeY = 20;
+                break;
+            default:
+                sizeX = 10;
+                sizeY = 10;
+                break;
+        }
     }
 }
