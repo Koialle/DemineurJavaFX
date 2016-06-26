@@ -44,8 +44,10 @@ public class Plateau2D extends Plateau {
                 gridCases[x][y] = c;
             }
         }
-        nbMinesLeft = nbMines;
-                        
+
+        if(this.caseCroix) this.initializeCaseCroix();
+        nbMinesLeft = nbMines; // updateNbMinesLeft
+        
         this.setChanged();
         this.notifyObservers(this);
     }
@@ -53,6 +55,9 @@ public class Plateau2D extends Plateau {
     @Override
     public List<Case> getNeighbors(Case c)
     {
+        if(c instanceof CaseCroix) 
+            return this.getCrossNeighbors(c);
+        
         int[] v = new int[]{
             -1, 1,
             0, 1,
@@ -74,7 +79,7 @@ public class Plateau2D extends Plateau {
         {
             for(int y = 0; y < sizeY; y++)
             {
-                if(gridCases[x][y].isTrapped()) gridCases[x][y].makeVisible(); // setChanged() et notify() dans Case.makeVisible, et plateau observe les cases
+                if(gridCases[x][y].isTrapped() || (caseCroix && gridCases[x][y] instanceof CaseCroix)) gridCases[x][y].makeVisible(); // setChanged() et notify() dans Case.makeVisible, et plateau observe les cases
             }
         }
         this.gameState = GameState.Lost;
@@ -169,23 +174,25 @@ public class Plateau2D extends Plateau {
     public void initializeCaseCroix() {
         
         CaseCroix cc = new CaseCroix();
-        Case[][] possibleCaseCroix;
+//        Case[][] possibleCaseCroix;
         int a, b;
         
-        // Réccupération des cases non minées et non vides
-        possibleCaseCroix = new Case[sizeX][sizeY];
-        gridCoordinates.entrySet().stream().filter((entry) -> (!entry.getKey().isTrapped() && !entry.getKey().isEmpty())).forEach((entry) -> {
-            int x = entry.getValue()[0];
-            int y = entry.getValue()[1];
-            possibleCaseCroix[x][y] = entry.getKey();
-        });
+//        // Réccupération des cases non minées et non vides
+//        possibleCaseCroix = new Case[sizeX][sizeY];
+//        gridCoordinates.entrySet().stream().filter((entry) -> (!entry.getKey().isTrapped() && !entry.getKey().isEmpty())).forEach((entry) -> {
+//            int x = entry.getValue()[0];
+//            int y = entry.getValue()[1];
+//            possibleCaseCroix[x][y] = entry.getKey();
+//        });
         
         // Génération d'index aléatoires
         a = getRandomIntExclusive(0, sizeX);
         b = getRandomIntExclusive(0, sizeY);
 
         // Remplacement des références
-        gridCoordinates.remove(possibleCaseCroix[a][b]);
+//        gridCoordinates.remove(possibleCaseCroix[a][b]);
+        if(gridCases[a][b].isTrapped()) nbMines--;
+        gridCoordinates.remove(gridCases[a][b]);
         gridCoordinates.put(cc, new int[]{a,b});
         gridCases[a][b] = cc;
     }
@@ -211,11 +218,16 @@ public class Plateau2D extends Plateau {
             int vx = coordinates[0]+dx;
             int vy = coordinates[1]+dy;
             
+//            if(vx >= 0 && vx < sizeX && vy >= 0 && vy < sizeY)
+//            {
+//                neighbors.add(gridCases[vx][vy]);
+//            }
+            
             while(vx >= 0 && vx < sizeX && vy >= 0 && vy < sizeY)
             {
                 neighbors.add(gridCases[vx][vy]);
-                vx = coordinates[0]+dx;
-                vy = coordinates[1]+dy;
+                vx += dx;
+                vy += dy;
             }
         }
         return neighbors;

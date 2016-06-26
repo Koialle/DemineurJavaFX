@@ -15,24 +15,16 @@ public class CaseCroix extends Case {
     protected void propagate()
     {
         // Affichage de la case
-        if(!flaged && this.makeVisible())
+        if(!flaged && !visible)
         {
+            this.makeVisible();
             neighbors.stream().filter((neighbor) -> (!neighbor.isVisible())).forEach((neighbor) -> {
-                if(neighbor.isTrapped()) neighbor.putFlag();
-                else neighbor.makeVisible();
+                if(neighbor.isTrapped()) {
+                    neighbor.setFlaged(true);
+                } else neighbor.makeVisible();
             });
+            this.setChanged();
+            this.notifyObservers();
         }
-    }
-    
-    @Override
-    public boolean makeVisible() { // Utiliser un indice de propagation pour connaitre qui est déclencheur : boolean triggerVisible
-//        if(!this.flaged && !this.visible)
-//        {
-//            this.visible = true;
-//            this.setChanged();
-//            this.notifyObservers();
-//            return true;
-//        }
-        return false;
     }
 }

@@ -68,11 +68,9 @@ public class Case extends Observable
      */
     protected void propagate()
     {
-        if(!this.flaged)
-        {
+        if(!this.flaged){
             // Affichage de la case si elle est piégée
-            if(this.trapped)
-            {
+            if(this.trapped){
                 this.trigger = true; // Case déclencheuse
                 this.makeVisible();
             }
@@ -152,6 +150,14 @@ public class Case extends Observable
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+        this.setChanged();
+        this.notifyObservers();
+    }
+    
+    public void setFlaged(boolean flaged) {
+        this.flaged = flaged;
+        this.setChanged();
+        this.notifyObservers();
     }
     
     public List<? extends Case> getNeighbors()

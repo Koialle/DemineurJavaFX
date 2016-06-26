@@ -43,7 +43,6 @@ public class PlateauView2D extends PlateauView {
                 
                 // Setting neighbors and value of case
                 c.initializeCaseNeighbors(plateau.getNeighbors(c));
-                if(plateau.getCaseCroix()) plateau.initializeCaseCroix();
                 
                 // Setting case view
                 CaseView cView = new CaseView2D(CASE_SIZE);

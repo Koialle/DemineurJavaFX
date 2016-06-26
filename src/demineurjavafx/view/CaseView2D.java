@@ -56,28 +56,20 @@ public class CaseView2D extends CaseView {
             {
                 if(c.isTrigger()) { // S'il s'agit de la case qui a déclenché l'explosion 
                     rectangle.setFill(Color.RED);
-                } else if(c instanceof CaseCroix) {
-                    rectangle.setFill(Color.GREEN);
                 } else {
                     rectangle.setFill(Color.LIGHTGREY);
                 }
                 root.getChildren().add(rectangle);
                 
                 if(c instanceof CaseCroix) {
+//                    rectangle.setFill(Color.GREEN);
+                    rectangle.setStroke(Color.DARKGREY);
                     root.getChildren().add(crossImageView);
                 } else {
                     root.getChildren().addAll(text);
                 }
-            }
-            // Si la case est cachée
-            else
-            {
-                if(c instanceof CaseCroix) {
-                    rectangle.setFill(Color.GREEN);
-                } else{
-                    rectangle.setFill(Color.GREY);
-                }
-                
+            } else { // Si la case est cachée
+                rectangle.setFill(Color.GREY);                
                 rectangle.setStroke(Color.DARKGREY);
                 root.getChildren().add(rectangle);
             }

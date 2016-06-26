@@ -12,7 +12,7 @@ import java.util.TimerTask;
  */
 abstract public class Plateau extends Observable implements PlateauCroix {
     
-    private boolean caseCroix = false;
+    protected boolean caseCroix = false;
     
     protected int secondesEcoulees = 0;
     protected int nbMines = 0;

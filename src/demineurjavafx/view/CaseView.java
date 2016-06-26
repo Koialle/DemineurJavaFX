@@ -83,13 +83,13 @@ abstract public class CaseView extends Parent implements Observer {
         text.setText("");
         if(c.isVisible())
         {
-            int caseValue = c.getValue();
             if(c.isTrapped() || c.isTrigger()) { // Case est une bombe
                 text.setText("X");
                 text.setFill(Color.BLACK);
             } else if (!c.isEmpty()) {
+                int caseValue = c.getValue();
                 text.setText(String.valueOf(caseValue));
-                if(caseValue == 1) text.setFill(Color.BLUE);
+                if(caseValue == 1) text.setFill(Color.BLUE); // Transformer en switch-case
                 if(caseValue == 2) text.setFill(Color.GREEN);
                 if(caseValue == 3) text.setFill(Color.RED);
                 if(caseValue == 4) text.setFill(Color.DARKBLUE);
