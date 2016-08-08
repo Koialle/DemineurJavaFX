@@ -19,7 +19,7 @@ import javafx.scene.text.TextAlignment;
  *
  * @author Ophélie EOUZAN
  */
-abstract public class CaseView extends Parent implements Observer {
+public abstract class CaseView extends Parent implements Observer {
 
     protected final StackPane root = new StackPane();
     protected final Text text;

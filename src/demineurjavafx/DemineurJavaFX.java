@@ -46,7 +46,7 @@ public class DemineurJavaFX extends Application {
         Menu menuOptions = new Menu("Options");
         Menu menuTaille = new Menu("Taille");
         Menu menuDifficulte = new Menu("Difficulté");
-        Menu menuExtension = new Menu("Extension");
+        Menu menuExtension = new Menu("Extensions");
         
         // Taille de la fenètre de démineur
         final ToggleGroup groupTaille = new ToggleGroup();
