@@ -96,6 +96,9 @@ public abstract class CaseView extends Parent implements Observer {
                 if(caseValue == 5) text.setFill(Color.DARKRED);
                 if(caseValue > 5) text.setFill(Color.BLACK);
             }
+        } else if(c.isInterrogation()){
+            text.setText("?");
+            text.setFill(Color.BLACK);
         }
     }
 }

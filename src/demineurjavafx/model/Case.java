@@ -16,19 +16,15 @@ public class Case extends Observable
     protected boolean flaged = false;
     protected boolean visible = false;
     protected boolean trigger = false;
+    protected boolean interrogation = false;
     
-    protected List<? extends Case> neighbors;
+    protected List<? extends Case> neighbors = new ArrayList();
     
     /* Constructeur(s) */
     
     public Case(boolean trapped)
     {
         this.trapped = trapped;
-        
-        this.value = 0;
-        this.flaged = false; // Une case marquée ne peut être découverte ?
-        this.visible = false;
-        this.neighbors = new ArrayList();
     }
     
     /* Méthodes */
@@ -68,7 +64,7 @@ public class Case extends Observable
      */
     protected void propagate()
     {
-        if(!this.flaged){
+        if(!this.flaged && !this.interrogation){
             // Affichage de la case si elle est piégée
             if(this.trapped){
                 this.trigger = true; // Case déclencheuse
@@ -85,7 +81,7 @@ public class Case extends Observable
     }
     
     /**
-     * Rend la case visible si elle ne l'était pas déjà et si elle n'a ps de drapeau.
+     * Rend la case visible si elle ne l'était pas déjà et si elle n'a pas de drapeau.
      * @return true si la case est devenue visible, false sinon
      */
     protected boolean makeVisible() {
@@ -103,11 +99,19 @@ public class Case extends Observable
      * Pose un drapeau si la case n'en a pas, enlève le drapeau si elle en a un.
      * @return true si un drapeau a été mis, false sinon
      */
-    public boolean putFlag()
+    public boolean putFlagOrInterrogation()
     {
         if(!this.visible)
         {
-            this.flaged = !this.flaged;
+            if(this.flaged) {
+                this.interrogation = true;
+                this.flaged = false;
+            } else if(this.interrogation) {
+                this.interrogation = false;
+            } else {
+                this.flaged = true;
+            }
+            
             this.setChanged();
             this.notifyObservers();
             return true;
@@ -148,6 +152,10 @@ public class Case extends Observable
         return visible;
     }
 
+    public boolean isInterrogation() {
+        return interrogation;
+    }
+    
     public void setVisible(boolean visible) {
         this.visible = visible;
         this.setChanged();

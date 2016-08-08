@@ -40,7 +40,6 @@ public class CaseView2D extends CaseView {
         } else {
             this.createCaseView((Case) o);
         }
-        
     }
     
     @Override
@@ -52,7 +51,7 @@ public class CaseView2D extends CaseView {
         {
             root.getChildren().clear();
             this.updateTextView(c);
-            if(c.isVisible())
+            if(c.isVisible() || c.isInterrogation())
             {
                 if(c.isTrigger()) { // S'il s'agit de la case qui a déclenché l'explosion 
                     rectangle.setFill(Color.RED);

@@ -57,7 +57,7 @@ public class PlateauView2D extends PlateauView {
                             c.propagateClick();
                         // Clic droit : ajout d'un drapeau ou suppression d'un drapeau
                         } else if(t.getButton() == MouseButton.SECONDARY) {
-                            c.putFlag(); // WARNING : possibility to put more flag than mines, but doesn't matter in Game play.
+                            c.putFlagOrInterrogation(); // WARNING : possibility to put more flag than mines, but doesn't matter in Game play.
                         }
                     }
                 });
